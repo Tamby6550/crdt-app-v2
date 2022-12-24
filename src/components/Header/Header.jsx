@@ -166,7 +166,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="lg:col-2 md:col-2 sm:col-3 col-3 p-0 h-screen" style={{ minHeight: "450px" }}>
+      <div className="lg:col-2 md:col-2 sm:col-3 col-3 p-0 " style={{ minHeight: "88vh" }}>
 
         <Card className='h-full p-0 card-custom'>
           <h1 className='text-center my-0 text-lg pt-2'>Menu</h1>

@@ -3,8 +3,7 @@ import { Button } from 'primereact/button'
 import { PrimeIcons } from 'primereact/api';
 import { InputText } from 'primereact/inputtext'
 import { Toast } from 'primereact/toast';
-import { Calendar } from 'primereact/calendar'
-import { InputTextarea } from 'primereact/inputtextarea';
+import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { InputMask } from 'primereact/inputmask'
 /*Importer modal */
@@ -13,13 +12,32 @@ import axios from 'axios'
 export default function Insertion(props) {
 
     //Declaration useSatate
-    const [infoClient, setinfoClient] = useState({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
-    const [verfChamp, setverfChamp] = useState({ code_client: false, nom: false });
+    const [infoClient, setinfoClient] = useState({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' });
+    const [verfChamp, setverfChamp] = useState({ code_presc: false, nom: false });
     const [charge, setcharge] = useState({ chajoute: false });
     const onVideInfo = () => {
-        setinfoClient({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
+        setinfoClient({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' });
+    }
+    const [selectAppelation, setselectAppelation] = useState(null);
+
+
+    const onAppelationChange = (e) => {
+        setselectAppelation(e.value);
+        setinfoClient({ ...infoClient, [e.target.name]: (e.target.value) });
+    }
+    const onInfoClient = (e) => {
+        setinfoClient({ ...infoClient, [e.target.name]: (e.target.value) })
     }
 
+    const choixPresc = [
+        { label: 'Pr', value: 'Pr' },
+        { label: 'Dr', value: 'Dr' }
+    ]
+    const choixSexe = [
+        { label: 'Homme', value: 'M' },
+        { label: 'Femme', value: 'F' },
+
+    ]
 
     //Affichage notification Toast primereact (del :7s )
     const toastTR = useRef(null);
@@ -44,7 +62,7 @@ export default function Insertion(props) {
     }
     const onHide = (name) => {
         dialogFuncMap[`${name}`](false);
-        setverfChamp({ code_client: false, nom: false });
+        setverfChamp({ code_presc: false, nom: false });
         onVideInfo();
     }
 
@@ -64,8 +82,6 @@ export default function Insertion(props) {
         );
     }
     /** Fin modal */
-
-
 
     const onSub = async () => { //Ajout de donnees vers Laravel
         setverfChamp({ code_client: false, nom: false })
@@ -95,40 +111,39 @@ export default function Insertion(props) {
                         <form className='flex flex-column justify-content-center'>
                             <div className='grid px-4'>
                                 <div className="lg:col-3  field my-0  flex flex-column">
-                                    <label htmlFor="username2" className="label-input-sm">Code</label>
-                                    <InputText id="username2" value={infoClient.code_client} aria-describedby="username2-help" name='code_client' className={verfChamp.code_client ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} />
-                                    {verfChamp.code_client ? <small id="username2-help" className="p-error block">Id patient vide !</small> : null}
+                                    <label htmlFor="username2" className="label-input-sm">Code*</label>
+                                    <InputText id="username2" value={infoClient.code_presc} aria-describedby="username2-help" name='code_presc' className={verfChamp.code_presc ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} onChange={onInfoClient} />
+                                    {verfChamp.code_presc ? <small id="username2-help" className="p-error block">Id patient vide !</small> : null}
                                 </div>
                             </div>
 
                             <div className='grid px-4'>
-                                
                                 <div className="lg:col-2 md:col-3 col-3 field my-0 flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Appelation</label>
-                                    <Dropdown options={props.choixPresc}  />
+                                    <Dropdown value={selectAppelation} options={choixPresc} onChange={onAppelationChange} name="titre" />
                                 </div>
                                 <div className="lg:col-10 md:col-9 col-9 field my-0 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">Nom*</label>
-                                    <InputText id="username2" value={infoClient.nom} aria-describedby="username2-help" className={verfChamp.nom ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} name='nom' onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: (e.target.value).toUpperCase() }) }} />
+                                    <label htmlFor="username2" className="label-input-sm">Nom*</label>
+                                    <InputText id="username2" value={infoClient.nom} aria-describedby="username2-help" className={verfChamp.nom ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} name='nom' onChange={onInfoClient} />
                                 </div>
-                             
+
                             </div>
                             <div className='grid px-4'>
                                 <div className="lg:col-6 col-12 field my-0  flex flex-column ">
                                     <label htmlFor="username2" className="label-input-sm">Phone 1</label>
-                                   <InputMask mask='099 99 999 99'/>
+                                    <InputNumber inputId="withoutgrouping" value={infoClient.phone1} name="phone1" onValueChange={onInfoClient} mode="decimal" useGrouping={false} />
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0  flex flex-column ">
                                     <label htmlFor="username2" className="label-input-sm">Phone 2</label>
-                                   <InputMask mask='099 99 999 99'/>
+                                    <InputNumber inputId="withoutgrouping" value={infoClient.phone1} name="phone1" onValueChange={onInfoClient} mode="decimal" useGrouping={false} />
                                 </div>
                                 <div className="col-12 lg:col-6 field my-0 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">Mobile</label>
-                                    <InputText id="username2" value={infoClient.nom} aria-describedby="username2-help" className={verfChamp.nom ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} name='nom' onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: (e.target.value).toUpperCase() }) }} />
+                                    <label htmlFor="username2" className="label-input-sm">Mobile</label>
+                                    <InputMask mask='099 99 999 99' name='mobile' onChange={onInfoClient} className="form-input-css-tamby" />
                                 </div>
                                 <div className="col-12 lg:col-6 field my-0 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">Adresse</label>
-                                    <InputText id="username2" value={infoClient.nom} aria-describedby="username2-help" className={verfChamp.nom ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} name='nom' onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: (e.target.value).toUpperCase() }) }} />
+                                    <label htmlFor="username2" className="label-input-sm">Adresse</label>
+                                    <InputText id="username2" value={infoClient.adresse} name="adresse" aria-describedby="username2-help" className="form-input-css-tamby" onChange={onInfoClient} />
                                 </div>
                             </div>
 
