@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
-import {Dropdown} from 'primereact/dropdown'
 import { PrimeIcons } from 'primereact/api'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import Insertion from './Prescripteur_c/Insertion'
@@ -18,10 +17,10 @@ export default function Prescripteur(props) {
     //Chargement de données
     const [charge, setCharge] = useState(true);
     const [refreshData, setrefreshData] = useState(0);
-    const [listClient, setlistClient] = useState([{ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: ''}]);
-    const [infoClient, setinfoClient] = useState({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
+    const [listClient, setlistClient] = useState([{ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' }]);
+    const [infoClient, setinfoClient] = useState({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '',titre:''});
     const onVideInfo = () => {
-        setinfoClient({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
+        setinfoClient({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' ,titre:''});
     }
 
     /**Style css */
@@ -47,23 +46,22 @@ export default function Prescripteur(props) {
         setlistClient([{ phone1: 'Chargement de données...' }])
         try {
             await axios.get(props.url + `getPrescripteur`)
-            .then(
-                (result) => {
-                    onVideInfo();
-                    setrefreshData(0);
-                    setlistClient(result.data);
-                    setCharge(false);
-                    console.log(result)
-                }
-            ).catch( (error)=>{
-console.log(error)
-            })
-            
-        } catch (error) {
-            console.log(error)
+                .then(
+                    (result) => {
+                        onVideInfo();
+                        setrefreshData(0);
+                        setlistClient(result.data);
+                        setCharge(false);
+                        console.log(result)
+                    }
+                ).catch((error) => {
+                    console.log(error.message);
+                })
 
+        } catch (error) {
+            console.log("Erreur de la connexion");
         }
-       
+
     }
 
     useEffect(() => {
@@ -73,11 +71,11 @@ console.log(error)
     const header = (
         <div className='flex flex-row justify-content-between align-items-center m-0 '>
             <div className='my-0 ml-2 py-2 flex'>
-                <Insertion url={props.url}   setrefreshData={setrefreshData} />
+                <Insertion url={props.url} setrefreshData={setrefreshData} />
                 <Recherche icon={PrimeIcons.SEARCH} setCharge={setCharge} setlistClient={setlistClient} setrefreshData={setrefreshData} url={props.url} infoClient={infoClient} setinfoClient={setinfoClient} />
-                {infoClient.code_client == "" && infoClient.nom == "" ? null : <small className='ml-5'>Resultat de recherche ,   code client : <i style={{ fontWeight: '700' }}>"{(infoClient.code_client).toUpperCase()}"</i>  , Nom : <i style={{ fontWeight: '700' }}>"{(infoClient.nom).toUpperCase()}"</i>  </small>}
+                {infoClient.code_presc == "" && infoClient.nom == "" ? null : <small className='ml-5'>Resultat de recherche ,   code client : <i style={{ fontWeight: '700' }}>"{(infoClient.code_presc).toUpperCase()}"</i>  , Nom : <i style={{ fontWeight: '700' }}>"{(infoClient.nom).toUpperCase()}"</i>  </small>}
             </div>
-            {infoClient.code_client != "" || infoClient.nom != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' onClick={() => setrefreshData(1)} /> : null}
+            {infoClient.code_presc != "" || infoClient.nom != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' onClick={() => setrefreshData(1)} /> : null}
         </div>
     )
 
@@ -90,9 +88,9 @@ console.log(error)
                     <Modification data={data} url={props.url} setrefreshData={setrefreshData} />
                     <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer'
                         onClick={() => {
-                           
+
                             const accept = () => {
-                                axios.delete(props.url + `deleteClientFact/${data.code_client}`)
+                                axios.delete(props.url + `deletePrescripteur/${data.code_presc}`)
                                     .then(res => {
                                         notificationAction('info', 'Suppression reuissie !', 'Enregistrement bien supprimer !');
                                         setrefreshData(1)
@@ -104,11 +102,9 @@ console.log(error)
                             }
                             const reject = () => {
                                 return null;
-                        
                             }
-
                             confirmDialog({
-                                message: 'Voulez vous supprimer l\'enregistrement : ' + data.code_client,
+                                message: 'Voulez vous supprimer l\'enregistrement : ' + data.code_presc,
                                 header: 'Suppression  ',
                                 icon: 'pi pi-exclamation-circle',
                                 acceptClassName: 'p-button-danger',

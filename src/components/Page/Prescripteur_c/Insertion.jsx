@@ -12,7 +12,7 @@ import axios from 'axios'
 export default function Insertion(props) {
 
     //Declaration useSatate
-    const [infoClient, setinfoClient] = useState({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' });
+    const [infoClient, setinfoClient] = useState({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '',titre:'' });
     const [verfChamp, setverfChamp] = useState({ code_presc: false, nom: false });
     const [charge, setcharge] = useState({ chajoute: false });
     const onVideInfo = () => {
@@ -84,9 +84,10 @@ export default function Insertion(props) {
     /** Fin modal */
 
     const onSub = async () => { //Ajout de donnees vers Laravel
-        setverfChamp({ code_client: false, nom: false })
+        setverfChamp({ code_presc: false, nom: false })
         setcharge({ chajoute: true });
-        await axios.post(props.url + 'insertClient', infoClient)
+        try {
+            await axios.post(props.url + 'insertPrescripteur', infoClient)
             .then(res => {
                 notificationAction(res.data.etat, 'Enregistrement', res.data.message);//message avy @back
                 setcharge({ chajoute: false });
@@ -99,7 +100,11 @@ export default function Insertion(props) {
                 console.log(err);
                 notificationAction('error', 'Erreur', err.data.message);//message avy @back
                 setcharge({ chajoute: false });
-            });
+            }); 
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
     return (
         <div>
@@ -113,18 +118,20 @@ export default function Insertion(props) {
                                 <div className="lg:col-3  field my-0  flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Code*</label>
                                     <InputText id="username2" value={infoClient.code_presc} aria-describedby="username2-help" name='code_presc' className={verfChamp.code_presc ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} onChange={onInfoClient} />
-                                    {verfChamp.code_presc ? <small id="username2-help" className="p-error block">Id patient vide !</small> : null}
+                                    {verfChamp.code_presc ? <small id="username2-help" className="p-error block">champ vide !</small> : null}
                                 </div>
                             </div>
 
                             <div className='grid px-4'>
                                 <div className="lg:col-2 md:col-3 col-3 field my-0 flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Appelation</label>
-                                    <Dropdown value={selectAppelation} options={choixPresc} onChange={onAppelationChange} name="titre" />
+                                    <Dropdown value={selectAppelation} options={choixPresc} onChange={onAppelationChange} name="titre" className={verfChamp.nom ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} />
+                                    {verfChamp.nom ? <small id="username2-help" className="p-error block">champ vide !</small> : null}
                                 </div>
                                 <div className="lg:col-10 md:col-9 col-9 field my-0 flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Nom*</label>
                                     <InputText id="username2" value={infoClient.nom} aria-describedby="username2-help" className={verfChamp.nom ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} name='nom' onChange={onInfoClient} />
+                                    {verfChamp.nom ? <small id="username2-help" className="p-error block">champ vide !</small> : null}
                                 </div>
 
                             </div>
@@ -135,29 +142,27 @@ export default function Insertion(props) {
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0  flex flex-column ">
                                     <label htmlFor="username2" className="label-input-sm">Phone 2</label>
-                                    <InputNumber inputId="withoutgrouping" value={infoClient.phone1} name="phone1" onValueChange={onInfoClient} mode="decimal" useGrouping={false} />
+                                    <InputNumber inputId="withoutgrouping" value={infoClient.phone2} name="phone2" onValueChange={onInfoClient} mode="decimal" useGrouping={false} />
                                 </div>
                                 <div className="col-12 lg:col-6 field my-0 flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Mobile</label>
                                     <InputMask mask='099 99 999 99' name='mobile' onChange={onInfoClient} className="form-input-css-tamby" />
                                 </div>
-                                <div className="col-12 lg:col-6 field my-0 flex flex-column">
+                                <div className="col-12 lg:col-12 field my-0 flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Adresse</label>
                                     <InputText id="username2" value={infoClient.adresse} name="adresse" aria-describedby="username2-help" className="form-input-css-tamby" onChange={onInfoClient} />
                                 </div>
                             </div>
-
-
                         </form>
                         <div className='flex mt-3 mr-4 justify-content-end'>
                             <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-primary ' label={charge.chajoute ? 'Enregistrement...' : 'Enregistrer'} onClick={() => {
-                                infoClient.code_client != "" ?
-                                    infoClient.nom != "" ?
+                                infoClient.code_presc != "" ?
+                                    infoClient.nom != "" && infoClient.titre ?
                                         onSub()
                                         :
-                                        setverfChamp({ code_client: false, nom: true })
+                                        setverfChamp({ code_presc: false, nom: true })
                                     :
-                                    setverfChamp({ code_client: true, nom: false })
+                                    setverfChamp({ code_presc: true, nom: false })
                             }} />
                         </div>
                     </div>
