@@ -12,30 +12,15 @@ import axios from 'axios'
 
 export default function Recherche(props) {
 
-
-    const [date5, setDate5] = useState(null);
-
-    const date_conv = (dateP) => {
-        let objectDate = new Date(dateP);
-
-        let day = objectDate.getDate();
-
-        let month = objectDate.getMonth();
-        month = month + 1;
-
-        let year = objectDate.getFullYear();
-        if (day < 10) {
-            day = '0' + day;
+    const controleChampDate = (dt) => {
+        let splitDt=(dt).split('/');
+        if (splitDt[0]<=31 && splitDt[1]<=12) {
+            RechercheloadData()
+        }else{
+            alert('Verifier la date de naissance !');
         }
-
-        if (month < 10) {
-
-            month = `0${month}`;
-        }
-
-        let format1 = `${day}/${month}/${year}`;
-        return format1;
     }
+
     //Declaration useSatate
     const [infoPatient, setinfoPatient] = useState({  nom: '', prenom: '', type: '', sexe: '', date_naiss: '', telephone: '', adresse: '' });
 
@@ -99,7 +84,6 @@ export default function Recherche(props) {
         setverfChamp({ code_client: false, nom: false });
         setselectsexe(null)
         setselecttype(null)
-        setDate5(null);
         onVideInfo()
     }
 
@@ -119,7 +103,8 @@ export default function Recherche(props) {
         }
        else{
            setverfChamp({  date_naiss: false });
-           RechercheloadData()
+
+           controleChampDate(infoPatient.date_naiss)
        }
     }
     const renderHeader = (name) => {
@@ -179,7 +164,7 @@ export default function Recherche(props) {
                             <div className='grid px-4'>
                                 <div className="col-12 field my-0  flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Date de naissance*</label>
-                                    <InputMask id="basic" value={infoPatient.date_naiss}  mask='99/99/9999'  onChange={(e) => {setDate5(e.value); setinfoPatient({ ...infoPatient, date_naiss: e.value});}}  />
+                                    <InputMask id="basic" value={infoPatient.date_naiss}  mask='99/99/9999'  onChange={(e) => {setinfoPatient({ ...infoPatient, date_naiss: e.value});}}  />
                                 <small>format: jj/mm/aaaa</small>
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0  flex flex-column ">

@@ -2,7 +2,10 @@ html,body {
   font-size: 12.5px;
   height: 100%;
 }
+.p-toast {
 
+  max-width: 28rem;
+}
 .p-panelmenu .p-panelmenu-panel .p-panelmenu-header>a {
   padding: 10px 9px;
   /* padding: 1vmax; */

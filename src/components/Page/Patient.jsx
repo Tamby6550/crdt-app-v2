@@ -8,6 +8,7 @@ import Insertion from './Patient_c/Insertion'
 import Modification from './Patient_c/Modification'
 import Recherche from './Patient_c/Recherche'
 import Voir from './Patient_c/Voir'
+import Registre from './Patient_c/Registre'
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
 
@@ -42,7 +43,7 @@ export default function Patient(props) {
     }
 
 
-    //Get List client
+    //Get List patient
     const loadData = async () => {
      
        
@@ -91,7 +92,7 @@ export default function Patient(props) {
         return (
             <div className='flex flex-row justify-content-between align-items-center m-0 '>
                 <div className='my-0  py-2'>
-                    <Button icon={PrimeIcons.PLUS} className='p-buttom-sm p-1 mr-2' style={stylebtnRec} tooltip={'Journal d\'arrivé'} tooltipOptions={{position: 'top'}}/>
+                    <Registre url={props.url} id_patient={data.id_patient} nom={data.nom} prenom={data.prenom} />
                     {/* <Voir data={data} url={props.url} setrefreshData={setrefreshData} /> */}
                     <Modification data={data} url={props.url} setrefreshData={setrefreshData} />
                     <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{position: 'top'}}

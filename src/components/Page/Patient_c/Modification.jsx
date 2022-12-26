@@ -12,6 +12,16 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputMask } from 'primereact/inputmask';
 export default function Modification(props) {
 
+    const controleChampDate = (dt) => {
+        let splitDt=(dt).split('/');
+        if (splitDt[0]<=31 && splitDt[1]<=12) {
+            onSub()
+        }else{
+            alert('Verifier la date de naissance !');
+        }
+    }
+
+
     //Declaration useSatate
     const [infoPatient, setinfoPatient] = useState({ id_patient: '', nom: '', prenom: '', type: '', sexe: '', date_naiss: '', telephone: '', adresse: '' });
     const [verfChamp, setverfChamp] = useState({ id_patient: false, nom: false, prenom: false, type: false, sexe: false, date_naiss: false, telephone: false, adresse: false  });
@@ -126,7 +136,7 @@ export default function Modification(props) {
 
         if (infoPatient.nom != ""  && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" && infoPatient.telephone != "" && infoPatient.adresse != "") {
             setverfChamp({ id_patient: false, nom: false, prenom: false, type: false, sexe: false, date_naiss: false, telephone: false, adresse: false });
-            onSub()
+            controleChampDate(infoPatient.date_naiss)
         }
     }
 
