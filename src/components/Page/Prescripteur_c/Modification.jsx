@@ -46,7 +46,7 @@ export default function Modification(props) {
     //Affichage notification Toast primereact (del :7s )
     const toastTR = useRef(null);
     const notificationAction = (etat, titre, message) => {
-        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 10000 });
+        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 3000 });
     }
 
     /**Style css */
@@ -97,9 +97,11 @@ export default function Modification(props) {
             .then(res => {
                 notificationAction(res.data.etat, 'Modification', res.data.message);//message avy @back
                 setcharge({ chajoute: false });
-                onVideInfo()
-                props.setrefreshData(1);
-                // onHide('displayBasic2');
+                setTimeout(()=>{
+                    props.setrefreshData(1);
+                    onVideInfo()
+                    onHide('displayBasic2');
+                },900)
             })
             .catch(err => {
                 console.log(err);
@@ -110,7 +112,7 @@ export default function Modification(props) {
     return (
         <>
             <Toast ref={toastTR} position="top-right" />
-            <Button icon={PrimeIcons.PENCIL} className='p-buttom-sm p-1 mr-2 ' style={stylebtnRec} tooltip='Modifier'
+            <Button icon={PrimeIcons.PENCIL} className='p-buttom-sm p-1 mr-2 ' style={stylebtnRec} tooltip='Modifier' tooltipOptions={{position: 'top'}}
                 onClick={() => {
                     onClick('displayBasic2');
                     oncharger(props.data);

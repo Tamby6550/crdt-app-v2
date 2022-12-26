@@ -14,7 +14,7 @@ export default function Voir(props) {
     //Declaration useSatate
     const [infoClient, setinfoClient] = useState({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
     const oncharger = (data) => {
-        setinfoClient({ code_client: data.code_client, nom: data.nom, description: data.description, rc: data.rc, stat: data.stat, nif: data.nif, cif: data.cif });
+        setinfoClient({ code_presc: data.code_presc, nom: data.nom, phone1: data.phone1, phone2: data.phone2, mobile: data.mobile, adresse: data.adresse });
     }
 
 
@@ -62,16 +62,17 @@ export default function Voir(props) {
 
     return (
         <>
-            <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2 ' tooltip='Voir' onClick={() => { onClick('displayBasic2'); oncharger(props.data) }} />
+            <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-button-secondary p-1 mr-2 ' tooltipOptions={{position: 'top'}} tooltip='Voir' onClick={() => { onClick('displayBasic2'); oncharger(props.data) }} />
 
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} style={{ width: '30vw' }} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1  style-modal-tamby">
                     <div className="col-12 field my-1 flex flex-column">
-                        <h5> <u>CODE</u>  :  {infoClient.code_client} </h5>
+                        <h5> <u>CODE</u>  :  {infoClient.code_presc} </h5>
                         <h5> <u>Nom</u>  :  {infoClient.nom} </h5>
-                        <h5> <u>Telephone</u>  :  {infoClient.nom} </h5>
-                        <h5> <u>Mobile</u>  :  {infoClient.rc} </h5>
-                        <h5> <u>Adresse</u>  :  {infoClient.stat} </h5>
+                        <h5> <u>Phone 1</u>  :  {infoClient.phone1} </h5>
+                        <h5> <u>Phone 2</u>  :  {infoClient.phone2} </h5>
+                        <h5> <u>Mobile</u>  :  {infoClient.mobile} </h5>
+                        <h5> <u>Adresse</u>  :  {infoClient.adresse} </h5>
                     </div>
                 </div>
             </Dialog>

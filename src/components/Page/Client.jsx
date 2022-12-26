@@ -22,6 +22,7 @@ export default function Client(props) {
     const onVideInfo = () => {
         setinfoClient({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
     }
+    const [totalenrg, settotalenrg] = useState(null)
 
     /**Style css */
     const stylebtnRec = {
@@ -42,34 +43,43 @@ export default function Client(props) {
 
     //Get List client
     const loadData = async () => {
-        setCharge(true);
-        setlistClient([{ stat: 'Chargement de données...' }])
         await axios.get(props.url + `getClientFact`)
             .then(
                 (result) => {
                     onVideInfo();
                     setrefreshData(0);
-                    setlistClient(result.data);
+                    setlistClient(result.data.all);
+                    settotalenrg(result.data.nbenreg)
                     setCharge(false);
                 }
             );
     }
 
     useEffect(() => {
-        loadData();
+        setCharge(true);
+        setlistClient([{ stat: 'Chargement de données...' }])
+        setTimeout(() => {
+            loadData();
+        }, 500)
     }, [refreshData]);
 
-  
-  
+
+
 
     const header = (
         <div className='flex flex-row justify-content-between align-items-center m-0 '>
             <div className='my-0 flex  py-2'>
-                <Insertion  url={props.url} setrefreshData={setrefreshData} />
-                <Recherche  icon={PrimeIcons.SEARCH} setCharge={setCharge} setlistClient={setlistClient} setrefreshData={setrefreshData} url={props.url} infoClient={infoClient} setinfoClient={setinfoClient} />
-                {infoClient.code_client == "" && infoClient.nom == "" ? null : <small className='ml-5'>Resultat de recherche ,   code client : <i style={{ fontWeight: '700' }}>"{(infoClient.code_client).toUpperCase()}"</i>  , Nom : <i style={{ fontWeight: '700' }}>"{(infoClient.nom).toUpperCase()}"</i>  </small>}
+                <Insertion url={props.url} setrefreshData={setrefreshData} />
+                <Recherche icon={PrimeIcons.SEARCH} setCharge={setCharge} setlistClient={setlistClient} setrefreshData={setrefreshData} url={props.url} infoClient={infoClient} setinfoClient={setinfoClient} />
+                {infoClient.code_client == "" && infoClient.nom == "" ? null : <label className='ml-5 mt-2'>Resultat de recherche ,   code client : <i style={{ fontWeight: '700' }}>"{(infoClient.code_client).toUpperCase()}"</i>  , Nom : <i style={{ fontWeight: '700' }}>"{(infoClient.nom).toUpperCase()}"</i>  </label>}
             </div>
-            {infoClient.code_client != "" || infoClient.nom != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' onClick={() => setrefreshData(1)} /> : null}
+            {infoClient.code_client != "" || infoClient.nom != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' tooltipOptions={{ position: 'top' }} onClick={() => setrefreshData(1)} />
+                :
+                <>
+                    <label >Liste des Clients (nb : 10)</label>
+                    <label className='ml-5 mt-1'>Total enregistrement : {totalenrg - 1}  </label>
+                </>
+            }
         </div>
     )
 
@@ -80,9 +90,9 @@ export default function Client(props) {
                     {/* <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2' onClick={() => { alert('Nom : ' + data.nom + ' !') }} tooltip='Voir' /> */}
                     <Voir data={data} url={props.url} setrefreshData={setrefreshData} />
                     <Modification data={data} url={props.url} setrefreshData={setrefreshData} />
-                    <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{position: 'top'}} 
+                    <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{ position: 'top' }}
                         onClick={() => {
-                           
+
                             const accept = () => {
                                 axios.delete(props.url + `deleteClientFact/${data.code_client}`)
                                     .then(res => {
@@ -96,7 +106,7 @@ export default function Client(props) {
                             }
                             const reject = () => {
                                 return null;
-                        
+
                             }
 
                             confirmDialog({

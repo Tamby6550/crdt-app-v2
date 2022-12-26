@@ -2,15 +2,83 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Button } from 'primereact/button'
 import { PrimeIcons } from 'primereact/api';
 import { InputText } from 'primereact/inputtext'
+import { Toast } from 'primereact/toast';
+import { Calendar } from 'primereact/calendar'
+import { Dropdown } from 'primereact/dropdown';
+import { InputMask } from 'primereact/inputmask';
 /*Importer modal */
 import { Dialog } from 'primereact/dialog';
-import axios from 'axios';
+import axios from 'axios'
 
 export default function Recherche(props) {
 
 
-    // const [infoClient, setinfoClient] = useState({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
-    const [verfChamp, setverfChamp] = useState(false);
+    const [date5, setDate5] = useState(null);
+
+    const date_conv = (dateP) => {
+        let objectDate = new Date(dateP);
+
+        let day = objectDate.getDate();
+
+        let month = objectDate.getMonth();
+        month = month + 1;
+
+        let year = objectDate.getFullYear();
+        if (day < 10) {
+            day = '0' + day;
+        }
+
+        if (month < 10) {
+
+            month = `0${month}`;
+        }
+
+        let format1 = `${day}/${month}/${year}`;
+        return format1;
+    }
+    //Declaration useSatate
+    const [infoPatient, setinfoPatient] = useState({  nom: '', prenom: '', type: '', sexe: '', date_naiss: '', telephone: '', adresse: '' });
+
+    const [verfChamp, setverfChamp] = useState({  nom: false, prenom: false, type: false, sexe: false, date_naiss: false, telephone: false, adresse: false });
+    const [charge, setcharge] = useState({ chajoute: false });
+    const onVideInfo = () => {
+        setinfoPatient({  nom: '', prenom: '', type: '', sexe: '', date_naiss: '', telephone: '', adresse: '' });
+    }
+
+
+    const [selectsexe, setselectsexe] = useState(null);
+    const [selecttype, setselecttype] = useState(null);
+
+    const onSexeChange = (e) => {
+        setselectsexe(e.value);
+        setinfoPatient({ ...infoPatient, [e.target.name]: (e.target.value) });
+    }
+    const onTypesChange = (e) => {
+        setselecttype(e.value);
+        setinfoPatient({ ...infoPatient, [e.target.name]: (e.target.value) });
+    }
+    const onInfoPatient = (e) => {
+        setinfoPatient({ ...infoPatient, [e.target.name]: e.target.value })
+    }
+
+
+    const choixType = [
+        { label: 'E', value: 'E' },
+        { label: 'L1', value: 'L1' },
+        { label: 'L2', value: 'L2' },
+    ]
+    const choixSexe = [
+        { label: 'Homme', value: 'M' },
+        { label: 'Femme', value: 'F' },
+
+    ]
+
+    //Affichage notification Toast primereact (del :7s )
+    const toastTR = useRef(null);
+    const notificationAction = (etat, titre, message) => {
+        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 3000 });
+    }
+
 
 
     /* Modal */
@@ -28,9 +96,11 @@ export default function Recherche(props) {
     }
     const onHide = (name) => {
         dialogFuncMap[`${name}`](false);
-        // onVideInfo()
-        setverfChamp(false);
-
+        setverfChamp({ code_client: false, nom: false });
+        setselectsexe(null)
+        setselecttype(null)
+        setDate5(null);
+        onVideInfo()
     }
 
     const renderFooter = (name) => {
@@ -39,6 +109,18 @@ export default function Recherche(props) {
                 <Button label="Fermer" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
             </div>
         );
+    }
+    /** Fin modal */
+
+    const controleChampVide = () => {
+
+        if (infoPatient.date_naiss == "") {
+            setverfChamp({ ...verfChamp, date_naiss: true })
+        }
+       else{
+           setverfChamp({  date_naiss: false });
+           RechercheloadData()
+       }
     }
     const renderHeader = (name) => {
         return (
@@ -56,12 +138,13 @@ export default function Recherche(props) {
     //Recherche List client
     const RechercheloadData = async () => {
         props.setCharge(true);
-        props.setlistClient([{ stat: 'Chargement de données...' }])
-        axios.post(props.url + 'rechercheClientFact', props.infoClient)
+        props.setlistPatient([{ stat: 'Chargement de données...' }])
+        axios.post(props.url + 'recherchePatient', infoPatient)
            .then(
                 (result) => {
+                    props.setinfoPatient(infoPatient);
                     props.setrefreshData(0);
-                    props.setlistClient(result.data)
+                    props.setlistPatient(result.data);
                     props.setCharge(false);
                     onHide('displayBasic2');
                 }
@@ -73,56 +156,46 @@ export default function Recherche(props) {
             <Button  tooltip='Recherche' label='' icon={PrimeIcons.SEARCH} value="chercher" className=' p-button-secondary' onClick={() => onClick('displayBasic2')} />
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} style={{ width: '35vw' }} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1 style-modal-tamby" >
-                    <form className='flex flex-column justify-content-center'>
-                        <div className='grid px-4'>
-                            <div className="col-6 field my-1 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">Code patient</label>
-                                <InputText id="username2" value={props.infoClient.code_client} aria-describedby="username2-help" name='code_client' className={"form-input-css-tamby"} onChange={(e) => { props.setinfoClient({ ...props.infoClient, [e.target.name]: e.target.value }) }} />
-                            </div>
-                        </div>
-                        <div className="field my-1 flex flex-column px-4">
-                            <label htmlFor="username2" className="label-input-sm">Nom</label>
-                            <InputText id="username2" value={props.infoClient.nom} aria-describedby="username2-help" className={ "form-input-css-tamby"} name='nom' onChange={(e) => { props.setinfoClient({ ...props.infoClient, [e.target.name]: (e.target.value).toUpperCase() }) }} />
+                <form className='flex flex-column justify-content-center'>
                           
-                        </div>
-
-                        {/* <div className='grid px-4'>
-                            <div className="col-6 field my-1 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">RC</label>
-                                <InputText id="username2" value={infoClient.rc} aria-describedby="username2-help" className="form-input-css-tamby" name='rc' onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} />
+                            <div className='grid px-4'>
+                                <div className="lg:col-6 col-12 field my-0 flex flex-column">
+                                    <label htmlFor="username2" className="label-input-sm">Nom</label>
+                                    <InputText id="username2" value={infoPatient.nom} aria-describedby="username2-help" className={"form-input-css-tamby"} name='nom' onChange={onInfoPatient} />
+                                </div>
+                                <div className="lg:col-6 col-12 field my-0 flex flex-column">
+                                    <label htmlFor="username2" className="label-input-sm">Prenom(s)</label>
+                                    <InputText id="username2" value={infoPatient.prenom} aria-describedby="username2-help" className="form-input-css-tamby" name='prenom' onChange={onInfoPatient} />
+                                </div>
+                                <div className="lg:col-6 col-12 field my-0 flex flex-column">
+                                    <label htmlFor="username2" className="label-input-sm">Type</label>
+                                    <Dropdown value={selecttype} options={choixType} onChange={onTypesChange} name="type" className={"form-input-css-tamby"} placeholder="choisir type" />
+                                </div>
+                                <div className="lg:col-6 col-12 field my-0 flex flex-column">
+                                    <label htmlFor="username2" className="label-input-sm">Sexe</label>
+                                    <Dropdown value={selectsexe} options={choixSexe} onChange={onSexeChange} name="sexe" className={"form-input-css-tamby"} placeholder="choisir sexe" />
+                                </div>
                             </div>
-                            <div className="col-6 field my-1 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">STAT</label>
-                                <InputText id="username2" value={infoClient.stat} aria-describedby="username2-help" className="form-input-css-tamby" name='stat' onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} />
+                            <div className='grid px-4'>
+                                <div className="col-12 field my-0  flex flex-column">
+                                    <label htmlFor="username2" className="label-input-sm">Date de naissance*</label>
+                                    <InputMask id="basic" value={infoPatient.date_naiss}  mask='99/99/9999'  onChange={(e) => {setDate5(e.value); setinfoPatient({ ...infoPatient, date_naiss: e.value});}}  />
+                                <small>format: jj/mm/aaaa</small>
+                                </div>
+                                <div className="lg:col-6 col-12 field my-0  flex flex-column ">
+                                    <label htmlFor="username2" className="label-input-sm">Telephone</label>
+                                    <InputMask mask='099 99 999 99' name='telephone' onChange={onInfoPatient} className={"form-input-css-tamby"} />
+                                </div>
+                                <div className="lg:col-6 col-12 field my-0  flex flex-column ">
+                                    <label htmlFor="username2" className="label-input-sm">Adresse</label>
+                                    <InputText id="username2" value={infoPatient.adresse} aria-describedby="username2-help" className={"form-input-css-tamby"} name='adresse' onChange={onInfoPatient} />
+                                </div>
                             </div>
-                        </div>
-                        <div className='grid px-4'>
-                            <div className="col-6 field my-1 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">CIF</label>
-                                <InputText id="username2" value={infoClient.cif} aria-describedby="username2-help" className="form-input-css-tamby" name='cif' onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} />
-                            </div>
-                            <div className="col-6 field my-1 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">NIF</label>
-                                <InputText id="username2" value={infoClient.nif} aria-describedby="username2-help" className="form-input-css-tamby" name='nif' onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} />
-                            </div>
-                        </div>
-                        <div className="field my-1 flex flex-column px-4">
-                            <label htmlFor="username2" className="label-input-sm">Decription</label>
-                            <InputTextarea rows={2} cols={28} value={infoClient.description} onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} autoResize name='description' />
-                        </div> */}
-
-                    </form>
-                  {verfChamp ? <center><small id="username2-help" className="p-error block justify-content-center" style={{fontWeight:'bold'}}>Veuillez entrer la critère pour la recherche - Code ou Nom </small></center>  : null} 
+                        </form>
+                  {verfChamp.date_naiss ? <center><small id="username2-help" className="p-error block justify-content-center" style={{fontWeight:'bold'}}>Veuillez vérifier l'année de naissance pour la recherche( Minimun de critére) </small></center>  : null} 
                     <div className='flex mt-3 mr-4 justify-content-end '>
                         <Button icon={PrimeIcons.SEARCH} className='p-button-sm p-button-secondary ' label={'Reherche'} onClick={() => {
-                            
-                            if (props.infoClient.code_client=="" && props.infoClient.nom=="") {
-                                setverfChamp(true)
-                            }
-                            else{
-                                setverfChamp(false)
-                                RechercheloadData()
-                            }
+                           controleChampVide()
                         }} />
 
                     </div>

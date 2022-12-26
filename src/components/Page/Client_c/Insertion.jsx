@@ -72,10 +72,11 @@ export default function Insertion(props) {
             .then(res => {
                 notificationAction(res.data.etat, 'Enregistrement', res.data.message);//message avy @back
                 setcharge({ chajoute: false });
-                onVideInfo()
-                props.setrefreshData(1);
-                onHide('displayBasic2');
-                // console.log(res.data.message)
+                setTimeout(() => {
+                    props.setrefreshData(1);
+                    onVideInfo()
+                    onHide('displayBasic2');
+                }, 900)
             })
             .catch(err => {
                 console.log(err);
@@ -87,7 +88,7 @@ export default function Insertion(props) {
         <div>
 
 
-            <Button icon={PrimeIcons.PLUS_CIRCLE} tooltip='Nouveau' tooltipOptions={{ position: 'top' }} label='Nouveau' className=' mr-2 p-button-primary' onClick={() => onClick('displayBasic2')} />
+            <Button icon={PrimeIcons.PLUS_CIRCLE} tooltip='Nouveau'  tooltipOptions={{ position: 'top' }} label='Nouveau' className=' mr-2 p-button-primary' onClick={() => onClick('displayBasic2')} />
             <div className='grid w-full '>
                 <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-5 md:col-8 col-12 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                     <div className="p-1 style-modal-tamby" >

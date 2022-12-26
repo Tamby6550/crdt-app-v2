@@ -62,7 +62,7 @@ export default function Voir(props) {
 
     return (
         <>
-            <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2 ' tooltip='Voir' tooltipOptions={{position: 'top'}}  onClick={() => { onClick('displayBasic2'); oncharger(props.data) }} />
+            <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2 p-button-secondary ' tooltip='Voir' tooltipOptions={{position: 'top'}}  onClick={() => { onClick('displayBasic2'); oncharger(props.data) }} />
 
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} style={{ width: '30vw' }} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1  style-modal-tamby">

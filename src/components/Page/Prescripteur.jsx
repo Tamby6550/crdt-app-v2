@@ -18,10 +18,11 @@ export default function Prescripteur(props) {
     const [charge, setCharge] = useState(true);
     const [refreshData, setrefreshData] = useState(0);
     const [listClient, setlistClient] = useState([{ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' }]);
-    const [infoClient, setinfoClient] = useState({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '',titre:''});
+    const [infoClient, setinfoClient] = useState({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '', titre: '' });
     const onVideInfo = () => {
-        setinfoClient({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' ,titre:''});
+        setinfoClient({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '', titre: '' });
     }
+    const [totalenrg, settotalenrg] = useState(null)
 
     /**Style css */
     const stylebtnRec = {
@@ -42,15 +43,15 @@ export default function Prescripteur(props) {
 
     //Get List client
     const loadData = async () => {
-        setCharge(true);
-        setlistClient([{ phone1: 'Chargement de données...' }])
+      
         try {
             await axios.get(props.url + `getPrescripteur`)
                 .then(
                     (result) => {
                         onVideInfo();
                         setrefreshData(0);
-                        setlistClient(result.data);
+                        setlistClient(result.data.all);
+                        settotalenrg(result.data.nbenreg)
                         setCharge(false);
                         console.log(result)
                     }
@@ -65,7 +66,11 @@ export default function Prescripteur(props) {
     }
 
     useEffect(() => {
-        loadData();
+        setCharge(true);
+        setlistClient([{ phone1: 'Chargement de données...' }])
+        setTimeout(() => {
+            loadData();
+        }, 500)
     }, [refreshData]);
 
     const header = (
@@ -73,9 +78,17 @@ export default function Prescripteur(props) {
             <div className='my-0 ml-2 py-2 flex'>
                 <Insertion url={props.url} setrefreshData={setrefreshData} />
                 <Recherche icon={PrimeIcons.SEARCH} setCharge={setCharge} setlistClient={setlistClient} setrefreshData={setrefreshData} url={props.url} infoClient={infoClient} setinfoClient={setinfoClient} />
-                {infoClient.code_presc == "" && infoClient.nom == "" ? null : <small className='ml-5'>Resultat de recherche ,   code client : <i style={{ fontWeight: '700' }}>"{(infoClient.code_presc).toUpperCase()}"</i>  , Nom : <i style={{ fontWeight: '700' }}>"{(infoClient.nom).toUpperCase()}"</i>  </small>}
+                {infoClient.code_presc == "" && infoClient.nom == "" ? null : <label className='ml-5 mt-2'>Resultat de recherche ,   code client : <i style={{ fontWeight: '700' }}>"{(infoClient.code_presc).toUpperCase()}"</i>  , Nom : <i style={{ fontWeight: '700' }}>"{(infoClient.nom).toUpperCase()}"</i>  </label>}
             </div>
-            {infoClient.code_presc != "" || infoClient.nom != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' onClick={() => setrefreshData(1)} /> : null}
+
+            {infoClient.code_presc != "" || infoClient.nom != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' tooltipOptions={{ position: 'top' }} onClick={() => setrefreshData(1)} />
+                :
+                <>
+                    <label >Liste des Prescripteurs (nb : 10)</label>
+                    <label className='ml-5 mt-1'>Total enregistrement : {totalenrg-1}  </label>
+                </>
+            }
+
         </div>
     )
 
@@ -86,7 +99,7 @@ export default function Prescripteur(props) {
                     {/* <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2' onClick={() => { alert('Nom : ' + data.nom + ' !') }} tooltip='Voir' /> */}
                     <Voir data={data} url={props.url} setrefreshData={setrefreshData} />
                     <Modification data={data} url={props.url} setrefreshData={setrefreshData} />
-                    <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer'
+                    <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{position: 'top'}}
                         onClick={() => {
 
                             const accept = () => {

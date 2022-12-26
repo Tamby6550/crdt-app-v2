@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
-import {Dropdown} from 'primereact/dropdown'
+import { Dropdown } from 'primereact/dropdown'
 import { PrimeIcons } from 'primereact/api'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import Insertion from './Examen_referentiel/Insertion'
@@ -18,24 +18,13 @@ export default function Examen(props) {
     //Chargement de données
     const [charge, setCharge] = useState(true);
     const [refreshData, setrefreshData] = useState(0);
-    const [listClient, setlistClient] = useState([{ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' }]);
-    const [infoClient, setinfoClient] = useState({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
+    const [listexamen, setlistexamen] = useState([{ id_examen: '', lib: '', code_tarif: '', type: '', montant: '', tarif: '' }]);
+    const [infoexamen, setinfoexamen] = useState({ id_examen: '', lib: '', code_tarif: '', type: '', tarif: '', montant: '' });
     const onVideInfo = () => {
-        setinfoClient({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
-    }
-    const choixType = [
-      {label: 'ECHOGRAPHIE', value:'ECHOGRAPHIE'},
-      {label: 'MAMMOGRAPHIE', value:'MAMMOGRAPHIE'},
-      {label: 'PANNORAMIQUE DENTAIRE', value:'PANNORAMIQUE DENTAIRE'},
-      {label: 'SCANNER', value:'SCANNER'},
-      {label: 'RADIOGRAPHIE', value:'RADIOGRAPHIE'},
-      {label: 'ECG', value:'ECG'},
-      {label: 'AUTRES', value:'AUTRES'}
-    ]
-    const choixTarif = [
-      {label: 'E', value:'E'},
-      {label: 'L', value:'L'}
-    ]
+        setinfoexamen({ id_examen: '', lib: '', code_tarif: '', type: '', montant: '', tarif: '' });
+    };
+    const [totalenrg, settotalenrg] = useState(null)
+
     /**Style css */
     const stylebtnRec = {
         fontSize: '1rem', padding: ' 0.8375rem 0.975rem', backgroundColor: '#a79d34', border: '1px solid #a79d34'
@@ -49,40 +38,51 @@ export default function Examen(props) {
     const toastTR = useRef(null);
     /*Notification Toast */
     const notificationAction = (etat, titre, message) => {
-        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 10000 });
+        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 3000 });
     }
 
 
     //Get List client
     const loadData = async () => {
-        setCharge(true);
-        setlistClient([{ stat: 'Chargement de données...' }])
-        await axios.get(props.url + `getClientFact`)
+        await axios.get(props.url + `getAllExamen`)
             .then(
                 (result) => {
                     onVideInfo();
                     setrefreshData(0);
-                    setlistClient(result.data);
+                    setlistexamen(result.data.allexamen);
+                    settotalenrg(result.data.nbenreg)
                     setCharge(false);
                 }
             );
     }
 
     useEffect(() => {
-        loadData();
+        setCharge(true);
+        setlistexamen([{ code_tarif: 'Chargement de données...' }])
+        setTimeout(() => {
+            loadData();
+        }, 500)
     }, [refreshData]);
 
-  
-  
+
+
 
     const header = (
         <div className='flex flex-row justify-content-between align-items-center m-0 '>
             <div className='my-0 ml-2 py-2 flex'>
-                <Insertion url={props.url} choixType={choixType} choixTarif={choixTarif} setrefreshData={setrefreshData} />
-                <Recherche icon={PrimeIcons.SEARCH} setCharge={setCharge} setlistClient={setlistClient} setrefreshData={setrefreshData} url={props.url} infoClient={infoClient} setinfoClient={setinfoClient} />
-                {infoClient.code_client == "" && infoClient.nom == "" ? null : <small className='ml-5'>Resultat de recherche ,   code client : <i style={{ fontWeight: '700' }}>"{(infoClient.code_client).toUpperCase()}"</i>  , Nom : <i style={{ fontWeight: '700' }}>"{(infoClient.nom).toUpperCase()}"</i>  </small>}
+                <Insertion url={props.url} setrefreshData={setrefreshData} totalenrg={totalenrg} />
+                <Recherche icon={PrimeIcons.SEARCH} setCharge={setCharge} setlistexamen={setlistexamen} setrefreshData={setrefreshData} url={props.url} infoexamen={infoexamen} setinfoexamen={setinfoexamen} />
+                {infoexamen.lib == "" && infoexamen.tarif == "" && infoexamen.type == "" && infoexamen.code_tarif == "" ? null : <label className='ml-5 mt-2'>Resultat de recherche ,   Libelle : <i style={{ fontWeight: '700' }}>"{(infoexamen.lib).toUpperCase()}"</i>  , tarif : <i style={{ fontWeight: '700' }}>"{(infoexamen.tarif).toUpperCase()}"</i>, Cotation : <i style={{ fontWeight: '700' }}>"{(infoexamen.code_tarif).toUpperCase()}"</i> , Type : <i style={{ fontWeight: '700' }}>"{(infoexamen.type).toUpperCase()}"</i>   </label>}
+
             </div>
-            {infoClient.code_client != "" || infoClient.nom != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' onClick={() => setrefreshData(1)} /> : null}
+            {infoexamen.lib != "" || infoexamen.tarif != "" || infoexamen.type != "" || infoexamen.code_tarif != "" ? <Button icon={PrimeIcons.REFRESH} tooltipOptions={{ position: 'top' }} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' onClick={() => setrefreshData(1)} />
+                :
+                <>
+                    <label >Liste des Examens (nb : 10)</label>
+                    <label className='ml-5 mt-1'>Total enregistrement : {totalenrg - 1}  </label>
+                </>
+            }
+
         </div>
     )
 
@@ -93,11 +93,11 @@ export default function Examen(props) {
                     {/* <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2' onClick={() => { alert('Nom : ' + data.nom + ' !') }} tooltip='Voir' /> */}
                     <Voir data={data} url={props.url} setrefreshData={setrefreshData} />
                     <Modification data={data} url={props.url} setrefreshData={setrefreshData} />
-                    <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer'
+                    <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{position: 'top'}}
                         onClick={() => {
-                           
+
                             const accept = () => {
-                                axios.delete(props.url + `deleteClientFact/${data.code_client}`)
+                                axios.delete(props.url + `deleteExamen/${data.id_examen}`)
                                     .then(res => {
                                         notificationAction('info', 'Suppression reuissie !', 'Enregistrement bien supprimer !');
                                         setrefreshData(1)
@@ -109,11 +109,11 @@ export default function Examen(props) {
                             }
                             const reject = () => {
                                 return null;
-                        
+
                             }
 
                             confirmDialog({
-                                message: 'Voulez vous supprimer l\'enregistrement : ' + data.code_client,
+                                message: 'Voulez vous supprimer l\'enregistrement : ' + data.id_examen,
                                 header: 'Suppression  ',
                                 icon: 'pi pi-exclamation-circle',
                                 acceptClassName: 'p-button-danger',
@@ -134,13 +134,13 @@ export default function Examen(props) {
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-                <DataTable header={header} value={listClient} responsiveLayout="scroll" className='bg-white'>
-                    <Column field='code_client' header="Id"></Column>
-                    <Column field='nom' header="Libellé"></Column>
-                    <Column field='rc' header="Tarif"></Column>
-                    <Column field='stat' header="Cotation"></Column>
-                    <Column field='cif' header="Montant"></Column>
-                    <Column field='nif' header="Type"></Column>
+                <DataTable header={header} value={listexamen} responsiveLayout="scroll" className='bg-white'>
+                    <Column field='id_examen' header="Id"></Column>
+                    <Column field='lib' header="Libellé"></Column>
+                    <Column field='tarif' header="Tarif"></Column>
+                    <Column field='code_tarif' header="Cotation"></Column>
+                    <Column field='montant' header="Montant"></Column>
+                    <Column field='types' header="Type"></Column>
                     <Column header="action" body={bodyBoutton} align={'left'}></Column>
                 </DataTable>
             </div>

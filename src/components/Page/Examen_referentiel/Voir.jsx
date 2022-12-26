@@ -12,9 +12,9 @@ import axios from 'axios'
 export default function Voir(props) {
 
     //Declaration useSatate
-    const [infoClient, setinfoClient] = useState({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
+    const [infoexamen, setinfoexamen] = useState({ id_examen: '', lib: '', code_tarif: '', type: '', montant: '', tarif: '' });
     const oncharger = (data) => {
-        setinfoClient({ code_client: data.code_client, nom: data.nom, description: data.description, rc: data.rc, stat: data.stat, nif: data.nif, cif: data.cif });
+        setinfoexamen({ id_examen: data.id_examen, lib: data.lib, code_tarif: data.code_tarif, type: data.types, montant: data.montant, tarif: data.tarif });
     }
 
 
@@ -62,19 +62,18 @@ export default function Voir(props) {
 
     return (
         <>
-            <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2 ' tooltip='Voir' onClick={() => { onClick('displayBasic2'); oncharger(props.data) }} />
+            <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-button-secondary p-1 mr-2 ' tooltipOptions={{position: 'top'}} tooltip='Voir' onClick={() => { onClick('displayBasic2'); oncharger(props.data) }} />
 
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} style={{ width: '30vw' }} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1  style-modal-tamby">
                     <div className="col-12 field my-1 flex flex-column">
-                        <h5> <u>Id</u>  :  {infoClient.code_client} </h5>
-                        <h5> <u>Nom</u>  :  {infoClient.nom} </h5>
-                        <h5> <u>Prenom</u>  :  {infoClient.nom} </h5>
-                        <h5> <u>Type</u>  :  {infoClient.rc} </h5>
-                        <h5> <u>Sexe</u>  :  {infoClient.stat} </h5>
-                        <h5> <u>Date de naissance</u>  : {infoClient.cif} </h5>
-                        <h5> <u>Téléphone</u>  : {infoClient.nif}  </h5>
-                        <h5> <u>Adresse</u>  : {infoClient.description}  </h5>
+                        <h5> <u>Id</u>  :  {infoexamen.id_examen} </h5>
+                        <h5> <u>Libellé</u>  :  {infoexamen.lib} </h5>
+                        <h5> <u>Tarif</u>  :  {infoexamen.tarif} </h5>
+                        <h5> <u>Cotation</u>  :  {infoexamen.code_tarif} </h5>
+                        <h5> <u>Montant</u>  :  {infoexamen.montant} </h5>
+                        <h5> <u>Type</u>  : {infoexamen.type} </h5>
+                      
                     </div>
                 </div>
             </Dialog>

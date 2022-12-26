@@ -33,11 +33,7 @@ export default function Insertion(props) {
         { label: 'Pr', value: 'Pr' },
         { label: 'Dr', value: 'Dr' }
     ]
-    const choixSexe = [
-        { label: 'Homme', value: 'M' },
-        { label: 'Femme', value: 'F' },
 
-    ]
 
     //Affichage notification Toast primereact (del :7s )
     const toastTR = useRef(null);
@@ -91,10 +87,11 @@ export default function Insertion(props) {
             .then(res => {
                 notificationAction(res.data.etat, 'Enregistrement', res.data.message);//message avy @back
                 setcharge({ chajoute: false });
-                onVideInfo()
-                props.setrefreshData(1);
-                onHide('displayBasic2');
-                // console.log(res.data.message)
+                setTimeout(() => {
+                    props.setrefreshData(1);
+                    onVideInfo()
+                    onHide('displayBasic2');
+                }, 900)
             })
             .catch(err => {
                 console.log(err);
@@ -109,7 +106,7 @@ export default function Insertion(props) {
     return (
         <div>
             <Toast ref={toastTR} position="top-right" />
-            <Button icon={PrimeIcons.PLUS_CIRCLE} tooltip='Nouveau' label='Nouveau' className='mr-2 p-button-primary' onClick={() => onClick('displayBasic2')} />
+            <Button icon={PrimeIcons.PLUS_CIRCLE} tooltip='Nouveau' tooltipOptions={{position: 'top'}} label='Nouveau' className='mr-2 p-button-primary' onClick={() => onClick('displayBasic2')} />
             <div className='grid'>
                 <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-5 md:col-8 col-12 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                     <div className="p-1 style-modal-tamby" >
