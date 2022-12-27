@@ -134,7 +134,7 @@ export default function Examen(props) {
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-                <DataTable header={header} value={listexamen} responsiveLayout="scroll" className='bg-white'>
+                <DataTable header={header} value={listexamen} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
                     <Column field='id_examen' header="Id"></Column>
                     <Column field='lib' header="Libellé"></Column>
                     <Column field='tarif' header="Tarif"></Column>

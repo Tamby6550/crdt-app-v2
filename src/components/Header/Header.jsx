@@ -21,7 +21,7 @@ export default function Header() {
       className: pathname === "/" && classactive,
       command: () => {
         navigate("/");
-        console.log(pathname)
+      
       }
     },
     {
@@ -35,7 +35,7 @@ export default function Header() {
           className: pathname === "/client" && classactive,
           command: () => {
             navigate("/client");
-            console.log(pathname)
+          
           }
         },
         {
@@ -44,7 +44,7 @@ export default function Header() {
           className: pathname === "/patient" && classactive,
           command: () => {
             navigate("/patient");
-            console.log(pathname)
+          
           }
         },
         {
@@ -53,7 +53,7 @@ export default function Header() {
           className: pathname === "/prescripteur" && classactive,
           command: () => {
             navigate("/prescripteur");
-            console.log(pathname)
+          
           }
         },
         {
@@ -62,7 +62,7 @@ export default function Header() {
           className: pathname === "/examen" && classactive,
           command: () => {
             navigate("/examen");
-            console.log(pathname)
+          
           }
         }
       ]
@@ -73,7 +73,7 @@ export default function Header() {
       className: pathname === "/patient_jour" && classactive,
       command: () => {
         navigate("/patient_jour");
-        console.log(pathname)
+      
       }
     },
     {
@@ -82,7 +82,7 @@ export default function Header() {
       className: pathname === "/examen_jour" && classactive,
       command: () => {
         navigate("/examen_jour");
-        console.log(pathname)
+      
       }
     },
     {
@@ -96,7 +96,7 @@ export default function Header() {
           className: pathname === "/ajout" && classactive,
           command: () => {
             navigate("/ajout");
-            console.log(pathname)
+          
           }
         },
         {
@@ -105,7 +105,7 @@ export default function Header() {
           className: pathname === "/details" && classactive,
           command: () => {
             navigate("/details");
-            console.log(pathname)
+          
           }
         },
         {
@@ -114,7 +114,7 @@ export default function Header() {
           className: pathname === "/impression" && classactive,
           command: () => {
             navigate("/impression");
-            console.log(pathname)
+          
           }
         },
         {
@@ -123,7 +123,7 @@ export default function Header() {
           className: pathname === "/annulation" && classactive,
           command: () => {
             navigate("/annulation");
-            console.log(pathname)
+          
           }
         },
       ]
@@ -139,7 +139,7 @@ export default function Header() {
           className: pathname === "/mode_paiement" && classactive,
           command: () => {
             navigate("/mode_paiement");
-            console.log(pathname)
+          
           }
         },
         {
@@ -148,7 +148,7 @@ export default function Header() {
           className: pathname === "/saisie_reglement" && classactive,
           command: () => {
             navigate("/saisie_reglement");
-            console.log(pathname)
+          
           }
         }
       ]

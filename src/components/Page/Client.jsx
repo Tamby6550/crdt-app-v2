@@ -131,7 +131,7 @@ export default function Client(props) {
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-                <DataTable header={header} value={listClient} responsiveLayout="scroll" className='bg-white'>
+                <DataTable header={header} value={listClient} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
                     <Column field='code_client' header="Code"></Column>
                     <Column field='nom' header="Nom"></Column>
                     <Column field='rc' header="RC"></Column>

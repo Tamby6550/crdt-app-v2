@@ -53,7 +53,6 @@ export default function Prescripteur(props) {
                         setlistClient(result.data.all);
                         settotalenrg(result.data.nbenreg)
                         setCharge(false);
-                        console.log(result)
                     }
                 ).catch((error) => {
                     console.log(error.message);
@@ -138,7 +137,7 @@ export default function Prescripteur(props) {
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-                <DataTable header={header} value={listClient} responsiveLayout="scroll" className='bg-white'>
+                <DataTable header={header} value={listClient} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
                     <Column field='code_presc' header="Code"></Column>
                     <Column field='nom' header="Nom"></Column>
                     <Column field='phone1' header="Phone1"></Column>
