@@ -116,7 +116,7 @@ export default function PatientM(props) {
                     <Button icon={PrimeIcons.CHECK_CIRCLE} className='p-buttom-sm p-1 ' style={stylebtnCheck} tooltip='Choisir' tooltipOptions={{ position: 'top' }}
                         onClick={() => {
                             props.setinfoRegistre({ ...props.infoRegistre, id_patient: data.id_patient, type_pat: data.type, nom: data.nom,prenom:data.prenom, date_naiss: data.datenaiss, telephone: data.telephone })
-                            notificationAction('success', 'Id Patient  : '+data.id_patient, '')
+                            // notificationAction('success', 'Id Patient  : '+data.id_patient, '')
                             onHide('displayBasic2');
                         }} />
                 </div>
@@ -128,7 +128,7 @@ export default function PatientM(props) {
     return (
         <>
             <Toast ref={toastTR} position="top-right" />
-            <Button icon={PrimeIcons.SEARCH} className='p-buttom-sm p-1 mr-2 ' style={stylebtnRec} tooltip='Choisir'  onClick={() => { onClick('displayBasic2'); chargementData() }} />
+            <Button icon={PrimeIcons.SEARCH} className='p-buttom-sm p-1 mr-2 ' style={stylebtnRec} tooltip='Recherche Patient'  onClick={() => { onClick('displayBasic2'); chargementData() }} />
 
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-7 md:col-10 col-12 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1  style-modal-tamby">

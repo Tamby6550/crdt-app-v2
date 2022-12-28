@@ -125,7 +125,7 @@ export default function Modification(props) {
                         <div className='grid px-4'>
                             <div className="lg:col-3  field my-0  flex flex-column">
                                 <label htmlFor="username2" className="label-input-sm">Code</label>
-                                <InputText id="username2" value={infoClient.code_presc} aria-describedby="username2-help" name='code_presc' className={verfChamp.code_presc ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} disabled />
+                                <InputText id="username2" value={infoClient.code_presc} aria-describedby="username2-help" name='code_presc' className={verfChamp.code_presc ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} readOnly />
                                 {verfChamp.code_presc ? <small id="username2-help" className="p-error block">Id patient vide !</small> : null}
                             </div>
                         </div>

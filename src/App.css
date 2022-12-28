@@ -209,3 +209,10 @@ ul.p-submenu-list.p-panelmenu-root-submenu {
 .blockui-demo button {
   margin-right: 0.5rem;
 }
+
+
+
+/*Patient du jour Id patient recherche*/
+.field.my-1.flex.flex-row.px-4.recherche-pat {
+  align-items: center;
+}

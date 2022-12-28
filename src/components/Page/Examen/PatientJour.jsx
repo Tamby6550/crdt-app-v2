@@ -74,7 +74,7 @@ export default function ExamenJour(props) {
       {infoRegistre.date_arriv != "" || infoRegistre.id_patient != "" || infoRegistre.num_arriv != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' tooltipOptions={{ position: 'top' }} onClick={() => setrefreshData(1)} />
         :
         < >
-          <label >Liste patients du jour</label>
+          <label >Journal d'entré</label>
           <label style={{visibility:'hidden'}} >Liste patients du journal</label>
         </>
       }
@@ -107,7 +107,7 @@ export default function ExamenJour(props) {
           <Column field={'id_patient'} header="Id Patient" style={{ fontWeight: '600' }}></Column>
           <Column field='nom' header="Nom"></Column>
           <Column field='date_naiss' header="Date_Naiss"></Column>
-          <Column field='type_pat' header="Type"></Column>
+          <Column field='type_pat' header="Tarif"></Column>
           {/* <Column field='telephone' header="Tél"></Column> */}
           <Column header="Action" body={bodyBoutton} align={'left'}></Column>
         </DataTable>

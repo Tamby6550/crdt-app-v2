@@ -103,7 +103,7 @@ export default function Modification(props) {
                         <div className='grid px-4'>
                             <div className="col-6 field my-1 flex flex-column">
                                 <label htmlFor="username2" className="label-input-sm">Code Client</label>
-                                <InputText id="username2" value={infoClient.code_client} aria-describedby="username2-help" name='code_client' className={verfChamp.code_client ? "form-input-css-tamby p-invalid " : "form-input-css-tamby "} onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} disabled />
+                                <InputText id="username2" value={infoClient.code_client} aria-describedby="username2-help" name='code_client' className={verfChamp.code_client ? "form-input-css-tamby p-invalid " : "form-input-css-tamby "} onChange={(e) => { setinfoClient({ ...infoClient, [e.target.name]: e.target.value }) }} readOnly />
                                 {verfChamp.code_client ? <small id="username2-help" className="p-error block">Code client vide !</small> : null}
                             </div>
                         </div>

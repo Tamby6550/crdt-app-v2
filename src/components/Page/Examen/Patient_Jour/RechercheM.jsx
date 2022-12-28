@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Button } from 'primereact/button'
 import { PrimeIcons } from 'primereact/api';
 import { InputText } from 'primereact/inputtext'
-import { Toast } from 'primereact/toast';
-import { Calendar } from 'primereact/calendar'
 import { Dropdown } from 'primereact/dropdown';
 import { InputMask } from 'primereact/inputmask';
 /*Importer modal */
@@ -140,7 +138,6 @@ export default function RechercheM(props) {
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} style={{ width: '35vw' }} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1 style-modal-tamby" >
                 <form className='flex flex-column justify-content-center'>
-                          
                             <div className='grid px-4'>
                                 <div className="lg:col-6 col-12 field my-0 flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Nom</label>
@@ -151,7 +148,7 @@ export default function RechercheM(props) {
                                     <InputText id="username2" value={infoPatient.prenom} aria-describedby="username2-help" className="form-input-css-tamby" name='prenom' onChange={onInfoPatient} />
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0 flex flex-column">
-                                    <label htmlFor="username2" className="label-input-sm">Type</label>
+                                    <label htmlFor="username2" className="label-input-sm">Tarif</label>
                                     <Dropdown value={selecttype} options={choixType} onChange={onTypesChange} name="type" className={"form-input-css-tamby"} placeholder="choisir type" />
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0 flex flex-column">

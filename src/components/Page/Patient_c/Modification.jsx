@@ -169,7 +169,7 @@ export default function Modification(props) {
                             <div className='grid px-4'>
                                 <div className="lg:col-3  field my-0  flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">N° Id</label>
-                                    <InputText id="username2" value={infoPatient.id_patient} disabled aria-describedby="username2-help" name='id_patient' className={"form-input-css-tamby"} />
+                                    <InputText id="username2" value={infoPatient.id_patient} readOnly aria-describedby="username2-help" name='id_patient' className={"form-input-css-tamby"} />
                                 </div>
                             </div>
 

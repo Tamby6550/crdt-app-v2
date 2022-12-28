@@ -138,7 +138,7 @@ export default function Patient(props) {
                     <Column field='id_patient' header="Id"></Column>
                     <Column field={'nom'} header="Nom"></Column>
                     <Column field={'prenom'} header="Prenom"></Column>
-                    <Column field='type' header="Type"></Column>
+                    <Column field='type' header="Tarif"></Column>
                     <Column field='sexe' header="Sexe"></Column>
                     <Column field='datenaiss' header="Date de naissance"></Column>
                     <Column field='telephone' header="Tel" ></Column>
