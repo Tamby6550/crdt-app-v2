@@ -86,7 +86,7 @@ export default function Recherche(props) {
         <div>
             <Button tooltip='Recherche' label='' icon={PrimeIcons.SEARCH} value="chercher" className=' p-button-secondary' onClick={() => onClick('displayBasic2')} />
             <div className='grid'>
-                <Dialog header={renderHeader('displayBasic2')} className="lg:col-4 md:col-6 col-12 p-0" visible={displayBasic2} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
+                <Dialog header={renderHeader('displayBasic2')} className="lg:col-5 md:col-6 col-10 p-0" visible={displayBasic2} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                     <div className="p-1 style-modal-tamby" >
                         <form className='flex flex-column justify-content-center'>
                             <div className='grid px-4'>

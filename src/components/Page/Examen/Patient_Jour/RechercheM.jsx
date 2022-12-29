@@ -135,7 +135,7 @@ export default function RechercheM(props) {
         <div>
 
             <Button  tooltip='Recherche patient' tooltipOptions={{position: 'top'}} label='' icon={PrimeIcons.SEARCH} value="chercher" className=' p-button-secondary p-button-sm p-1' onClick={() => onClick('displayBasic2')} />
-            <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} style={{ width: '35vw' }} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
+            <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-5 md:col-6 col-12 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1 style-modal-tamby" >
                 <form className='flex flex-column justify-content-center'>
                             <div className='grid px-4'>

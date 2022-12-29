@@ -1,5 +1,5 @@
 html,body {
-  font-size: 12.5px;
+  font-size: 11.5px;
   height: 100%;
 }
 .p-toast {
@@ -215,4 +215,12 @@ ul.p-submenu-list.p-panelmenu-root-submenu {
 /*Patient du jour Id patient recherche*/
 .field.my-1.flex.flex-row.px-4.recherche-pat {
   align-items: center;
+}
+
+
+/*TabView*/
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background: #f5f4f4;
+  border-color: #a8b6db;
+  color: #7370f9;
 }

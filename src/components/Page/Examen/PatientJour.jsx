@@ -74,7 +74,7 @@ export default function ExamenJour(props) {
       {infoRegistre.date_arriv != "" || infoRegistre.id_patient != "" || infoRegistre.num_arriv != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' tooltipOptions={{ position: 'top' }} onClick={() => setrefreshData(1)} />
         :
         < >
-          <label >Journal d'entré</label>
+          <label >Journal d'entré d'aujoudhui </label>
           <label style={{visibility:'hidden'}} >Liste patients du journal</label>
         </>
       }

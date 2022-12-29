@@ -12,14 +12,14 @@ import axios from 'axios'
 export default function Insertion(props) {
 
     const controleChampDate = (dt) => {
-        let splitDt=(dt).split('/');
-        if (splitDt[0]<=31 && splitDt[1]<=12) {
+        let splitDt = (dt).split('/');
+        if (splitDt[0] <= 31 && splitDt[1] <= 12) {
             onSub()
-        }else{
+        } else {
             alert('Verifier la date de naissance !');
         }
     }
-    
+
     //Declaration useSatate
     const [infoPatient, setinfoPatient] = useState({ id_patient: '', nom: '', prenom: '', type: '', sexe: '', date_naiss: '', telephone: '', adresse: '' });
 
@@ -130,7 +130,8 @@ export default function Insertion(props) {
         }
 
 
-        if (infoPatient.nom != ""  && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" && infoPatient.telephone != "" && infoPatient.adresse != "") {
+        if (infoPatient.nom != "" && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" && infoPatient.telephone != "" && infoPatient.adresse != "") {
+          
             setverfChamp({ id_patient: false, nom: false, prenom: false, type: false, sexe: false, date_naiss: false, telephone: false, adresse: false });
             controleChampDate(infoPatient.date_naiss)
         }
@@ -159,7 +160,7 @@ export default function Insertion(props) {
     return (
         <div>
             <Toast ref={toastTR} position="top-right" />
-            <Button icon={PrimeIcons.PLUS_CIRCLE} tooltip='Nouveau' tooltipOptions={{position: 'top'}} label='Nouveau'  className='mr-2 p-button-primary' onClick={() => { onClick('displayBasic2'); idPatient(props.totalenrg) }} />
+            <Button icon={PrimeIcons.PLUS_CIRCLE} tooltip='Nouveau' tooltipOptions={{ position: 'top' }} label='Nouveau' className='mr-2 p-button-primary' onClick={() => { onClick('displayBasic2'); idPatient(props.totalenrg) }} />
             <div className='grid'>
                 <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-5 md:col-8 col-12 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                     <div className="p-1 style-modal-tamby" >
@@ -195,8 +196,8 @@ export default function Insertion(props) {
                             <div className='grid px-4'>
                                 <div className="col-12 field my-0  flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Date de naissance*</label>
-                                    <InputMask id="basic" value={infoPatient.date_naiss}  mask='99/99/9999'  onChange={(e) => {  setinfoPatient({ ...infoPatient, date_naiss: e.value});}}  className={verfChamp.date_naiss ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} />
-                                    {verfChamp.date_naiss ? <small id="username2-help" className="p-error block">Champ vide !</small> :<small>format: jj/mm/aaaa</small>}
+                                    <InputMask id="basic" value={infoPatient.date_naiss} mask='99/99/9999' onChange={(e) => { setinfoPatient({ ...infoPatient, date_naiss: e.value }); }} className={verfChamp.date_naiss ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} />
+                                    {verfChamp.date_naiss ? <small id="username2-help" className="p-error block">Champ vide !</small> : <small>format: jj/mm/aaaa</small>}
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0  flex flex-column ">
                                     <label htmlFor="username2" className="label-input-sm">Telephone*</label>

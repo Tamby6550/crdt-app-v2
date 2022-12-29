@@ -177,7 +177,7 @@ export default function Recherche(props) {
                                 </div>
                             </div>
                         </form>
-                  {verfChamp.date_naiss ? <center><small id="username2-help" className="p-error block justify-content-center" style={{fontWeight:'bold'}}>Veuillez vérifier l'année de naissance pour la recherche( Minimun de critére) </small></center>  : null} 
+                  {verfChamp.date_naiss ? <center><small id="username2-help" className="p-error block justify-content-center" style={{fontWeight:'bold'}}>Vérifier la date de naissance pour la recherche( Minimun de critére) </small></center>  : null} 
                     <div className='flex mt-3 mr-4 justify-content-end '>
                         <Button icon={PrimeIcons.SEARCH} className='p-button-sm p-button-secondary ' label={'Reherche'} onClick={() => {
                            controleChampVide()

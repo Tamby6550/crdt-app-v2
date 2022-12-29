@@ -132,11 +132,11 @@ export default function Modification(props) {
         if (infoPatient.nom == "") {
             setverfChamp({ ...verfChamp, nom: true })
         }
-
-
-        if (infoPatient.nom != ""  && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" && infoPatient.telephone != "" && infoPatient.adresse != "") {
+        
+        if (infoPatient.nom != ""  && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" && infoPatient.telephone != "" && infoPatient.adresse != "") {      
             setverfChamp({ id_patient: false, nom: false, prenom: false, type: false, sexe: false, date_naiss: false, telephone: false, adresse: false });
             controleChampDate(infoPatient.date_naiss)
+
         }
     }
 
