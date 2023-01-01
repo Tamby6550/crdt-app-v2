@@ -133,7 +133,7 @@ export default function PatientM(props) {
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-7 md:col-10 col-12 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1  style-modal-tamby">
                     <div className="flex flex-column justify-content-center">
-                        <DataTable header={header} value={listPatient} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'} style={{ fontSize: '0.9em' }}>
+                        <DataTable header={header} value={listPatient} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'} style={{ fontSize: '0.96em' }}>
                             <Column field='id_patient' header="Id"></Column>
                             <Column field={'nom'} header="Nom"></Column>
                             <Column field={'prenom'} header="Prenom"></Column>

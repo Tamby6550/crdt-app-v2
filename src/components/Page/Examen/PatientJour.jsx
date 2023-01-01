@@ -8,6 +8,7 @@ import Modifier from './Patient_Jour/Modifier'
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import Recherche from './Patient_Jour/Recherche'
+import { Tag } from 'primereact/tag';
 
 export default function ExamenJour(props) {
 
@@ -20,8 +21,6 @@ export default function ExamenJour(props) {
   const onVide = () => {
     setinfoRegistre({ num_arriv: '', date_arriv: '', id_patient: '' })
   }
-
-  const [totalenrg, settotalenrg] = useState(null)
 
 
   /**Style css */
@@ -74,8 +73,8 @@ export default function ExamenJour(props) {
       {infoRegistre.date_arriv != "" || infoRegistre.id_patient != "" || infoRegistre.num_arriv != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' tooltipOptions={{ position: 'top' }} onClick={() => setrefreshData(1)} />
         :
         < >
-          <label >Journal d'entré d'aujoudhui </label>
-          <label style={{visibility:'hidden'}} >Liste patients du journal</label>
+          <label >Journal d'entré  </label>
+          <label style={{ visibility: 'hidden' }} >Liste patients du journal</label>
         </>
       }
     </div>
@@ -85,8 +84,38 @@ export default function ExamenJour(props) {
     return (
       <div className='flex flex-row justify-content-between align-items-center m-0 '>
         <div className='my-0  py-2'>
+          <Modifier url={props.url} data={data} setrefreshData={setrefreshData} />
           {data.verf_exam == '0' ?
-            <Modifier url={props.url} data={data} setrefreshData={setrefreshData} />
+            <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{ position: 'top' }}
+              onClick={() => {
+                let dt=(data.date_arr).split('/');
+                let cmpltDate=dt[0]+'-'+dt[1]+'-'+dt[2];
+
+                const accept = () => {
+                  axios.delete(props.url + `deleteRegistre/${data.numero}&${cmpltDate}`)
+                    .then(res => {
+                      notificationAction('info', 'Suppression reuissie !', 'Enregistrement bien supprimer !');
+                      setrefreshData(1)
+                    })
+                    .catch(err => {
+                      console.log(err);
+                      notificationAction('error', 'Suppression non reuissie !', 'Enregirement non supprimer !');
+                    })
+                }
+                const reject = () => {
+                  return null;
+                }
+                confirmDialog({
+                  message: 'Voulez vous supprimer le journal d\'arrivée , n° ' + data.numero+' , date : '+data.date_arr,
+                  header: 'Suppression  ',
+                  icon: 'pi pi-exclamation-circle',
+                  acceptClassName: 'p-button-danger',
+                  acceptLabel: 'Ok',
+                  rejectLabel: 'Annuler',
+                  accept,
+                  reject
+                });
+              }} />
             :
             null
           }
@@ -94,6 +123,21 @@ export default function ExamenJour(props) {
       </div>
     )
   }
+
+  const bodyBouttonh = (data) => {
+    return (
+        <div className='flex flex-row justify-content-between align-items-center m-0 '>
+            <div className='my-0  py-2'>
+                <label htmlFor="">{data.date_arr} </label>
+                {data.date_arrive == data.jourj ?
+                    <Tag className="mr-2 " icon={PrimeIcons.CHECK_SQUARE} severity={"success"}   ></Tag>
+                    :
+                    <Tag className="mr-2 " severity={"warning"}  icon={PrimeIcons.CLOCK} ></Tag>
+                }
+            </div>
+        </div>
+    )
+}
 
   return (
     <>
@@ -103,13 +147,13 @@ export default function ExamenJour(props) {
       <div className="flex flex-column justify-content-center">
         <DataTable header={header} value={listRegistre} responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun patient enregistré sur le journal "} >
           <Column field='numero' header="N° Arrivée" style={{ fontWeight: '700' }}></Column>
-          <Column field={'date_arr'} header="Date Arrivée" style={{ fontWeight: '600' }}></Column>
+          <Column field={'date_arr'} header="Date Arrivée" body={bodyBouttonh} style={{ fontWeight: '600' }}></Column>
           <Column field={'id_patient'} header="Id Patient" style={{ fontWeight: '600' }}></Column>
           <Column field='nom' header="Nom"></Column>
           <Column field='date_naiss' header="Date_Naiss"></Column>
           <Column field='type_pat' header="Tarif"></Column>
-          {/* <Column field='telephone' header="Tél"></Column> */}
           <Column header="Action" body={bodyBoutton} align={'left'}></Column>
+
         </DataTable>
       </div>
     </>

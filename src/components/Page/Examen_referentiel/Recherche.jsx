@@ -29,7 +29,7 @@ export default function Recherche(props) {
     const choixType = [
         { label: 'ECHOGRAPHIE', value: 'ECHOGRAPHIE' },
         { label: 'MAMMOGRAPHIE', value: 'MAMMOGRAPHIE' },
-        { label: 'PANNORAMIQUE DENTAIRE', value: 'PANNORAMIQUE DENTAIRE' },
+        { label: 'PANORAMIQUE DENTAIRE', value: 'PANORAMIQUE DENTAIRE' },
         { label: 'SCANNER', value: 'SCANNER' },
         { label: 'RADIOGRAPHIE', value: 'RADIOGRAPHIE' },
         { label: 'ECG', value: 'ECG' },
@@ -81,28 +81,34 @@ export default function Recherche(props) {
 
 
 
-  
+
     //Recherche List client
     const RechercheloadData = async () => {
         // console.log(props.infoexamen)
         props.setCharge(true);
         props.setlistexamen([{ code_tarif: 'Chargement de données...' }])
         axios.post(props.url + 'rechercheExamen', props.infoexamen)
-           .then(
+            .then(
                 (result) => {
                     props.setrefreshData(0);
                     props.setlistexamen(result.data)
-                    props.setCharge(false);
                     onHide('displayBasic2');
+                    props.setCharge(false);
                 }
             );
     }
     return (
         <div>
 
-            <Button  tooltip='Recherche' label='' icon={PrimeIcons.SEARCH} value="chercher" className=' p-button-secondary' onClick={() => onClick('displayBasic2')} />
+            <Button tooltip='Recherche' label='' icon={PrimeIcons.SEARCH} value="chercher" className=' p-button-secondary'
+                onClick={() => {
+                    onClick('displayBasic2');
+                    if (props.tarif != "") {
+                        props.setinfoexamen({ ...props.infoexamen, tarif: props.tarif });
+                    }
+                }} />
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} style={{ width: '35vw' }} footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
-            <div className="p-1 style-modal-tamby" >
+                <div className="p-1 style-modal-tamby" >
                     <form className='flex flex-column justify-content-center'>
 
                         <div className='grid px-4'>
@@ -121,11 +127,13 @@ export default function Recherche(props) {
                                 <Dropdown value={selecttype} options={choixType} onChange={onTypesChange} name="type" className={verfChamp.type ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} placeholder="" />
                                 {verfChamp.type ? <small id="username2-help" className="p-error block">Champ vide !</small> : null}
                             </div>
-                            <div className="lg:col-4 col-12 field my-0 flex flex-column">
-                                <label htmlFor="username2" className="label-input-sm">Tarif</label>
-                                <Dropdown value={selecttarif} options={choixTarif} onChange={onTarifChange} name="tarif" className={verfChamp.tarif ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} placeholder="" />
-                                {verfChamp.tarif ? <small id="username2-help" className="p-error block">Champ vide !</small> : null}
-                            </div>
+                            {props.tarif != "" ? null :
+                                <div className="lg:col-4 col-12 field my-0 flex flex-column">
+                                    <label htmlFor="username2" className="label-input-sm">Tarif</label>
+                                    <Dropdown value={selecttarif} options={choixTarif} onChange={onTarifChange} name="tarif" className={verfChamp.tarif ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} placeholder="" />
+                                    {verfChamp.tarif ? <small id="username2-help" className="p-error block">Champ vide !</small> : null}
+                                </div>
+                            }
                             {/* <div className="lg:col-8 col-12 field my-0 flex flex-column">
                                 <label htmlFor="username2" className="label-input-sm">Montant (Ar)</label>
 
@@ -135,17 +143,17 @@ export default function Recherche(props) {
                         </div>
 
                     </form>
-                    {verfChamp ? <center><small id="username2-help" className="p-error block justify-content-center" style={{fontWeight:'bold'}}>Veuillez entrer la critère pour la recherche  </small></center>  : null} 
+                    {verfChamp ? <center><small id="username2-help" className="p-error block justify-content-center" style={{ fontWeight: 'bold' }}>Veuillez entrer la critère pour la recherche  </small></center> : null}
 
                     <div className='flex mt-3 mr-4 justify-content-end'>
                         <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-secondary ' label={'Recherche'} onClick={() => {
-                           if ( props.infoexamen.lib=="" &&  props.infoexamen.code_tarif=="" && props.infoexamen.type=="" && props.infoexamen.tarif=="" && props.infoexamen.montant=="" ) {
-                            setverfChamp(true)
-                        }
-                        else{
-                            setverfChamp(false)
-                            RechercheloadData()
-                        }
+                            if (props.infoexamen.lib == "" && props.infoexamen.code_tarif == "" && props.infoexamen.type == "" && props.infoexamen.tarif == "" && props.infoexamen.montant == "") {
+                                setverfChamp(true)
+                            }
+                            else {
+                                setverfChamp(false)
+                                RechercheloadData()
+                            }
                         }} />
                     </div>
                 </div>

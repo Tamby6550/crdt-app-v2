@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { DataTable } from 'primereact/datatable'
-import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { PrimeIcons } from 'primereact/api'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { BlockUI } from 'primereact/blockui';
 import { ProgressSpinner } from 'primereact/progressspinner';
-
+import AjoutExamen from './ExamenNonEffe/AjoutExamen'
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
+import { Tag } from 'primereact/tag';
 
 
 export default function ExamenNonEff(props) {
@@ -84,11 +84,12 @@ export default function ExamenNonEff(props) {
         return (
             <div className='flex flex-row justify-content-between align-items-center m-0 '>
                 <div className='my-0  py-2'>
-                    <Button icon={PrimeIcons.PLUS} className='p-button-sm p-button-secondary ' label={'Ajout'} onClick={() => { }} />
+                    <AjoutExamen url={props.url} type_pat={data.type_pat} data={data} />
                 </div>
             </div>
         )
     }
+  
 
     return (
         <>
@@ -98,14 +99,15 @@ export default function ExamenNonEff(props) {
             <div className="flex flex-column justify-content-center">
                 <BlockUI blocked={blockedDocument} template={<ProgressSpinner />}>
                     <DataTable header={header} value={listExamenNonEff} responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun examen à éffectuées"} >
-                        <Column field='numero' header="N° Arrivée" style={{ fontWeight: '600' }}></Column>
-                        <Column field={'date_arr'} header="Date Arrivée" style={{ fontWeight: '600' }}></Column>
+
+                        <Column field='numero' header={'Numéro d\'Arrivée'} style={{ fontWeight: '600' }}></Column>
+                        <Column field={'date_arr'} header={'Date d\'Arrivée'} style={{ fontWeight: '600' }}></Column>
                         <Column field={'id_patient'} header="ID" style={{ fontWeight: '600' }}></Column>
                         <Column field='nom' header="Nom"></Column>
                         <Column field='date_naiss' header="Date_Naiss"></Column>
                         <Column field='type_pat' header="Tarif"></Column>
-                        {/* <Column field='telephone' header="Tél"></Column> */}
                         <Column header="Action" body={bodyBoutton} align={'left'}></Column>
+                        {/* <Column field='telephone' header="Tél"></Column> */}
                     </DataTable>
                 </BlockUI>
 

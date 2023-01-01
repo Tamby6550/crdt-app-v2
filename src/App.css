@@ -224,3 +224,18 @@ ul.p-submenu-list.p-panelmenu-root-submenu {
   border-color: #a8b6db;
   color: #7370f9;
 }
+
+/*Tag sucess*/
+.p-tag.p-tag-success {
+  background-color: #22C55E;
+  color: #ffffff;
+}
+
+
+/*Tost Success*/
+.p-toast .p-toast-message.p-toast-message-success {
+  background: #e4f8f0;
+  border: solid #1ea97c;
+  border-width: 0 0 0 6px;
+  color: #1ea97c;
+}
