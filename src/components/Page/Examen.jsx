@@ -16,7 +16,7 @@ import { Toast } from 'primereact/toast';
 export default function Examen(props) {
 
     //Chargement de données
-    const [charge, setCharge] = useState(true);
+    const [charge, setCharge] = useState(false);
     const [refreshData, setrefreshData] = useState(0);
     const [listexamen, setlistexamen] = useState([{ id_examen: '', lib: '', code_tarif: '', type: '', montant: '', tarif: '' }]);
     const [infoexamen, setinfoexamen] = useState({ id_examen: '', lib: '', code_tarif: '', type: '', tarif: '', montant: '' });
@@ -134,7 +134,7 @@ export default function Examen(props) {
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-                <DataTable header={header} value={listexamen} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
+                <DataTable header={header} value={listexamen} loading={charge} scrollable scrollHeight="500px"   responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
                     <Column field='id_examen' header="Id"></Column>
                     <Column field='lib' header="Libellé"></Column>
                     <Column field='tarif' header="Tarif"></Column>

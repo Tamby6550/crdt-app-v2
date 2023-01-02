@@ -111,12 +111,12 @@ export default function Modification(props) {
 
     const controleChampVide = () => {
 
-        if (infoPatient.adresse == "") {
-            setverfChamp({ ...verfChamp, adresse: true })
-        }
-        if (infoPatient.telephone == "") {
-            setverfChamp({ ...verfChamp, telephone: true })
-        }
+        // if (infoPatient.adresse == "") {
+        //     setverfChamp({ ...verfChamp, adresse: true })
+        // }
+        // if (infoPatient.telephone == "") {
+        //     setverfChamp({ ...verfChamp, telephone: true })
+        // }
         if (infoPatient.date_naiss == "") {
             setverfChamp({ ...verfChamp, date_naiss: true })
         }
@@ -133,7 +133,7 @@ export default function Modification(props) {
             setverfChamp({ ...verfChamp, nom: true })
         }
         
-        if (infoPatient.nom != ""  && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" && infoPatient.telephone != "" && infoPatient.adresse != "") {      
+        if (infoPatient.nom != ""  && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" ) {      
             setverfChamp({ id_patient: false, nom: false, prenom: false, type: false, sexe: false, date_naiss: false, telephone: false, adresse: false });
             controleChampDate(infoPatient.date_naiss)
 

@@ -239,3 +239,18 @@ ul.p-submenu-list.p-panelmenu-root-submenu {
   border-width: 0 0 0 6px;
   color: #1ea97c;
 }
+
+
+/*CSS icon recherhce global dans examennonEff*/
+.global-tamby {
+  position: relative;
+  display: flex;
+}
+
+
+/*Boutton success*/
+.p-button.p-button-success, .p-buttonset.p-button-success > .p-button, .p-splitbutton.p-button-success > .p-button, .p-fileupload-choose.p-button-success {
+  color: #ffffff;
+  background: #22C55E;
+  border: 1px solid #22C55E;
+}

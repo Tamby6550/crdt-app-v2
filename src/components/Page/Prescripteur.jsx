@@ -15,7 +15,7 @@ import { Toast } from 'primereact/toast';
 export default function Prescripteur(props) {
 
     //Chargement de données
-    const [charge, setCharge] = useState(true);
+    const [charge, setCharge] = useState(false);
     const [refreshData, setrefreshData] = useState(0);
     const [listClient, setlistClient] = useState([{ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '' }]);
     const [infoClient, setinfoClient] = useState({ code_presc: '', nom: '', phone1: '', phone2: '', mobile: '', adresse: '', titre: '' });
@@ -137,7 +137,7 @@ export default function Prescripteur(props) {
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-                <DataTable header={header} value={listClient} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
+                <DataTable header={header} value={listClient} responsiveLayout="scroll" scrollable scrollHeight="500px"  loading={charge} className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
                     <Column field='code_presc' header="Code"></Column>
                     <Column field='nom' header="Nom"></Column>
                     <Column field='phone1' header="Phone1"></Column>

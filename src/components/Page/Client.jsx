@@ -15,7 +15,7 @@ import { Toast } from 'primereact/toast';
 export default function Client(props) {
 
     //Chargement de données
-    const [charge, setCharge] = useState(true);
+    const [charge, setCharge] = useState(false);
     const [refreshData, setrefreshData] = useState(0);
     const [listClient, setlistClient] = useState([{ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' }]);
     const [infoClient, setinfoClient] = useState({ code_client: '', nom: '', description: '', rc: '', stat: '', nif: '', cif: '' });
@@ -131,7 +131,7 @@ export default function Client(props) {
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-                <DataTable header={header} value={listClient} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
+                <DataTable header={header} value={listClient} responsiveLayout="scroll" scrollable scrollHeight="500px"   loading={charge} className='bg-white' emptyMessage={'Aucun resultat trouvé'}>
                     <Column field='code_client' header="Code"></Column>
                     <Column field='nom' header="Nom"></Column>
                     <Column field='rc' header="RC"></Column>

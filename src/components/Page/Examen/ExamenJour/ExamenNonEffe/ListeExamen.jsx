@@ -4,12 +4,14 @@ import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { PrimeIcons } from 'primereact/api'
 import { Dialog } from 'primereact/dialog';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import Recherche from '../../../Examen_referentiel/Recherche'
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import { BlockUI } from 'primereact/blockui';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import PopConfirm from './PopConfirm'
+import { InputText } from 'primereact/inputtext';
 
 export default function ListeExamen(props) {
 
@@ -90,6 +92,8 @@ export default function ListeExamen(props) {
                     setlistexamen(result.data);
                     setBlockedDocument(false);
                     setCharge(false);
+                    initFilters1();
+
                     // localStorage.setItem("listexamen", JSON.stringify(result.data));
                 }
             );
@@ -97,18 +101,13 @@ export default function ListeExamen(props) {
 
 
     const chargementData = () => {
-    //    console.log(localStorage.getItem("listexamen"))
-        // if (localStorage.getItem("listexamen")===null || localStorage.getItem("listexamen")===undefined  ) {
+   
             setCharge(true);
             setBlockedDocument(true);
             setlistexamen([{ code_tarif: 'Chargement de données...' }]);
             setTimeout(() => {
                 loadData();
             }, 200)
-        // }else{
-        //     let storelisteexamen = JSON.parse(localStorage.getItem("listexamen"));
-        //     setlistexamen(storelisteexamen)
-        // }
     }
 
 
@@ -141,6 +140,43 @@ export default function ListeExamen(props) {
     }
  
 
+       //Global filters
+    
+       const [filters1, setFilters1] = useState(null);
+       const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+       const onGlobalFilterChange1 = (e) => {
+           const value = e.target.value;
+           let _filters1 = { ...filters1 };
+           _filters1['global'].value = value;
+   
+           setFilters1(_filters1);
+           setGlobalFilterValue1(value);
+       }
+       const initFilters1 = () => {
+           setFilters1({
+               'global': { value: null, matchMode: FilterMatchMode.CONTAINS }
+           });
+           setGlobalFilterValue1('');
+       }
+       const clearFilter1 = () => {
+           initFilters1();
+       }
+       const renderHeader1 = () => {
+           return (
+               <div className="flex justify-content-between">
+                   <Button type="button" icon="pi pi-filter-slash" label="Vider" className="p-button-outlined" onClick={clearFilter1} />
+                   <h3 className='m-3'>Liste examens</h3>
+                   <span className="p-input-icon-left global-tamby">
+                       <i className="pi pi-search" />
+                       <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Recherche global..." />
+                   </span>
+               </div>
+           )
+       }
+       const header1 = renderHeader1();
+   
+       //Global filters
+
     return (
         <>
             <Toast ref={toastTR} position="top-right" />
@@ -151,7 +187,7 @@ export default function ListeExamen(props) {
                 <div className="p-1  style-modal-tamby">
                     <div className="flex flex-column justify-content-center">
                         <BlockUI blocked={blockedDocument} template={<ProgressSpinner />}>
-                            <DataTable header={header} value={listexamen} responsiveLayout="scroll" className='bg-white' emptyMessage={'Aucun resultat trouvé'} style={{ fontSize: '1em' }}>
+                            <DataTable rows={10} rowsPerPageOptions={[10,20,50]}  paginator  header={header1} value={listexamen} scrollable scrollHeight="400px"  responsiveLayout="scroll" className='bg-white' filters={filters1}  globalFilterFields={['id_examen','lib', 'tarif', 'code_tarif', 'montant', 'types']}  emptyMessage={'Aucun resultat trouvé'} style={{ fontSize: '1em' }}>
                                 <Column field='id_examen' header="Id"></Column>
                                 <Column field='lib' header="Libellé"></Column>
                                 <Column field='tarif' header="Tarif"></Column>

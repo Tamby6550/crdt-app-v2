@@ -106,12 +106,12 @@ export default function Insertion(props) {
 
     const controleChampVide = () => {
 
-        if (infoPatient.adresse == "") {
-            setverfChamp({ ...verfChamp, adresse: true })
-        }
-        if (infoPatient.telephone == "") {
-            setverfChamp({ ...verfChamp, telephone: true })
-        }
+        // if (infoPatient.adresse == "") {
+        //     setverfChamp({ ...verfChamp, adresse: true })
+        // }
+        // if (infoPatient.telephone == "") {
+        //     setverfChamp({ ...verfChamp, telephone: true })
+        // }
         if (infoPatient.date_naiss == "") {
             setverfChamp({ ...verfChamp, date_naiss: true })
         }
@@ -130,7 +130,7 @@ export default function Insertion(props) {
         }
 
 
-        if (infoPatient.nom != "" && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "" && infoPatient.telephone != "" && infoPatient.adresse != "") {
+        if (infoPatient.nom != "" && infoPatient.type != "" && infoPatient.sexe != "" && infoPatient.date_naiss != "") {
           
             setverfChamp({ id_patient: false, nom: false, prenom: false, type: false, sexe: false, date_naiss: false, telephone: false, adresse: false });
             controleChampDate(infoPatient.date_naiss)
@@ -200,12 +200,12 @@ export default function Insertion(props) {
                                     {verfChamp.date_naiss ? <small id="username2-help" className="p-error block">Champ vide !</small> : <small>format: jj/mm/aaaa</small>}
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0  flex flex-column ">
-                                    <label htmlFor="username2" className="label-input-sm">Telephone*</label>
+                                    <label htmlFor="username2" className="label-input-sm">Telephone</label>
                                     <InputMask mask='099 99 999 99' name='telephone' onChange={onInfoPatient} className={verfChamp.telephone ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} />
                                     {verfChamp.telephone ? <small id="username2-help" className="p-error block">Champ vide !</small> : null}
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0  flex flex-column ">
-                                    <label htmlFor="username2" className="label-input-sm">Adresse*</label>
+                                    <label htmlFor="username2" className="label-input-sm">Adresse</label>
                                     <InputText id="username2" value={infoPatient.adresse} aria-describedby="username2-help" className={verfChamp.adresse ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} name='adresse' onChange={onInfoPatient} />
                                     {verfChamp.adresse ? <small id="username2-help" className="p-error block">Champ vide !</small> : null}
                                 </div>
