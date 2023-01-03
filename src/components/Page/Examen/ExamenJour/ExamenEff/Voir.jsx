@@ -5,6 +5,8 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
+import CompteRendu from './CompteRendu';
+
 /*Importer modal */
 import { Dialog } from 'primereact/dialog';
 import axios from 'axios'
@@ -114,8 +116,10 @@ export default function Voir(props) {
                                         notificationAction('info', 'Suppression reuissie !', 'Examen bien supprimer !');
                                         chargementData()
                                         if (res.data.nbrexamen == 1) {
-                                            props.setrefreshData(1);
-                                            onHide('displayBasic2')
+                                            setTimeout(() => {
+                                                props.setrefreshData(1);
+                                                onHide('displayBasic2');
+                                            }, 450)
                                         }
                                     })
                                     .catch(err => {
@@ -137,6 +141,8 @@ export default function Voir(props) {
                                 reject
                             });
                         }} />
+                    <CompteRendu url={props.url} data={data} date_arriv={props.data.date_arr}  num_arriv={props.data.numero} />
+
                 </div>
             </div>
         )
@@ -149,15 +155,14 @@ export default function Voir(props) {
 
             <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2 p-button-info ' tooltip='Voir' tooltipOptions={{ position: 'top' }} onClick={() => { onClick('displayBasic2'); chargementData() }} />
 
-            <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-7 md:col-8 col-11 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
+            <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-9 md:col-10 col-11 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1  style-modal-tamby">
-                    {/* <ConfirmDialog /> */}
                     <div className="col-12 field my-1 flex flex-column">
                         <h3 className='m-1' htmlFor="">Date d'arrivé : <u style={{ fontWeight: 'bold', fontSize: '1.2rem' }}> {props.data.date_arr}</u></h3>
                         <h3 className='m-1' htmlFor="">Numéro d'arrivée : <u style={{ color: 'rgb(34, 197, 94)', fontWeight: 'bold', fontSize: '1.4rem' }}> {props.data.numero}</u></h3>
                     </div>
                     <div className="flex flex-column justify-content-center">
-                        <DataTable header={header} value={infoexamenPatient} scrollable scrollHeight="350px" loading={charge} responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun resultat !"} style={{fontSize:'1.1em'}} >
+                        <DataTable header={header} value={infoexamenPatient} scrollable scrollHeight="350px" loading={charge} responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun resultat !"} style={{ fontSize: '1.1em' }} >
                             <Column field='lib_examen' header={'Libellé'} style={{ fontWeight: '600' }}></Column>
                             <Column field={'code_tarif'} header={'Cotation'} style={{ fontWeight: '600' }}></Column>
                             <Column field={'quantite'} header="Quantité" style={{ fontWeight: '600' }}></Column>
@@ -165,17 +170,13 @@ export default function Voir(props) {
                             <Column field='date_exam' header="Date examen"></Column>
                             <Column field='type' header="Type"></Column>
                             <Column header="Action" body={bodyBoutton} align={'left'}></Column>
-
                         </DataTable>
-
-
                     </div>
                     <div className='flex mt-3 mr-4 justify-content-center '>
                         <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-success ' label={charge.chajoute ? 'Veuillez attendez...' : 'Valider'}
                             onClick={() => {
 
                             }} />
-
                     </div>
 
                 </div>

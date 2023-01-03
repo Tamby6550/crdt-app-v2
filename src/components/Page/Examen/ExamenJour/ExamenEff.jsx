@@ -3,9 +3,9 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { PrimeIcons } from 'primereact/api'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { BlockUI } from 'primereact/blockui';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import AjoutExamen from './ExamenNonEffe/AjoutExamen'
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
@@ -48,6 +48,8 @@ export default function ExamenEff(props) {
                     setlistExamenNonEff(result.data);
                     setBlockedDocument(false);
                     setCharge(false);
+                    initFilters1();
+
                 }
             );
     }
@@ -79,27 +81,62 @@ export default function ExamenEff(props) {
             </div>
         )
     }
-  
 
+    //Global filters
+
+    const [filters1, setFilters1] = useState(null);
+    const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+    const onGlobalFilterChange1 = (e) => {
+        const value = e.target.value;
+        let _filters1 = { ...filters1 };
+        _filters1['global'].value = value;
+
+        setFilters1(_filters1);
+        setGlobalFilterValue1(value);
+    }
+    const initFilters1 = () => {
+        setFilters1({
+            'global': { value: null, matchMode: FilterMatchMode.CONTAINS }
+        });
+        setGlobalFilterValue1('');
+    }
+    const clearFilter1 = () => {
+        initFilters1();
+    }
+    const renderHeader1 = () => {
+        return (
+            <div className="flex justify-content-between">
+                <Button type="button" icon="pi pi-filter-slash" label="Vider" className="p-button-outlined" onClick={clearFilter1} />
+                <h3 className='m-3'>Examens éffectuées</h3>
+                <span className="p-input-icon-left global-tamby">
+                    <i className="pi pi-search" />
+                    <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Recherche global..." />
+                </span>
+            </div>
+        )
+    }
+    const header1 = renderHeader1();
+
+    //Global filters
     return (
         <>
             <Toast ref={toastTR} position="top-right" />
             <ConfirmDialog />
 
             <div className="flex flex-column justify-content-center">
-               
-                    <DataTable header={header} value={listExamenNonEff} loading={charge} scrollable scrollHeight="550px" responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun examen à éffectuées"} >
 
-                        <Column field='numero' header={'Numéro d\'Arrivée'} style={{ fontWeight: '600' }}></Column>
-                        <Column field={'date_arr'} header={'Date d\'Arrivée'} style={{ fontWeight: '600' }}></Column>
-                        <Column field={'id_patient'} header="ID" style={{ fontWeight: '600' }}></Column>
-                        <Column field='nom' header="Nom"></Column>
-                        <Column field='date_naiss' header="Date_Naiss"></Column>
-                        <Column field='type_pat' header="Tarif"></Column>
-                        <Column header="Action" body={bodyBoutton} align={'left'}></Column>
-                        {/* <Column field='telephone' header="Tél"></Column> */}
-                    </DataTable>
-           
+                <DataTable header={header1} filters={filters1} globalFilterFields={['numero', 'date_arr', 'id_patient', 'nom', 'date_naiss', 'type_pat']} value={listExamenNonEff} loading={charge} scrollable scrollHeight="550px" responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun examen à éffectuées"} >
+
+                    <Column field='numero' header={'Numéro d\'Arrivée'} style={{ fontWeight: '600' }}></Column>
+                    <Column field={'date_arr'} header={'Date d\'Arrivée'} style={{ fontWeight: '600' }}></Column>
+                    <Column field={'id_patient'} header="ID" style={{ fontWeight: '600' }}></Column>
+                    <Column field='nom' header="Nom"></Column>
+                    <Column field='date_naiss' header="Date_Naiss"></Column>
+                    <Column field='type_pat' header="Tarif"></Column>
+                    <Column header="Action" body={bodyBoutton} align={'left'}></Column>
+                    {/* <Column field='telephone' header="Tél"></Column> */}
+                </DataTable>
+
 
             </div>
         </>

@@ -34,7 +34,7 @@ export default function Registre(props) {
 
     const toastTR = useRef(null);
     const notificationAction = (etat, titre, message) => {
-        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 50000 });
+        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 15000 });
     }
 
     /* Modal */

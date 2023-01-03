@@ -183,7 +183,7 @@ export default function Insertion(props) {
                                     <InputText id="username2" value={infoPatient.prenom} aria-describedby="username2-help" className="form-input-css-tamby" name='prenom' onChange={onInfoPatient} />
                                 </div>
                                 <div className="lg:col-6 col-12 field my-0 flex flex-column">
-                                    <label htmlFor="username2" className="label-input-sm">Type*</label>
+                                    <label htmlFor="username2" className="label-input-sm">Tarif*</label>
                                     <Dropdown value={selecttype} options={choixType} onChange={onTypesChange} name="type" className={verfChamp.type ? "form-input-css-tamby p-invalid" : "form-input-css-tamby"} placeholder="choisir type" />
                                     {verfChamp.type ? <small id="username2-help" className="p-error block">Champ vide !</small> : null}
                                 </div>

@@ -130,7 +130,8 @@ export default function ExamenJour(props) {
             <div className='my-0  py-2'>
                 <label htmlFor="">{data.date_arr} </label>
                 {data.date_arrive == data.jourj ?
-                    <Tag className="mr-2 " icon={PrimeIcons.CHECK_SQUARE} severity={"success"}   ></Tag>
+                    // <Tag className="mr-2 " icon={PrimeIcons.CHECK_SQUARE} severity={"success"}   ></Tag>
+                    null
                     :
                     <Tag className="mr-2 " severity={"warning"}  icon={PrimeIcons.CLOCK} ></Tag>
                 }
