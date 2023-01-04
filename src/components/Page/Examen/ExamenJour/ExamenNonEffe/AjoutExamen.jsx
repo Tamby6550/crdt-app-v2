@@ -17,17 +17,13 @@ export default function AjoutExamen(props) {
     // ****************************ATO ABY NY ZAVATRA NATAOKO AMNAZY**********************************************  
     const [infoExamen, setinfoExamen] = useState([{ lib_examen: '', code_tarif: '', quantite: '', montant: '', type_examen: '' }]);
     let Nouveau = { lib_examen: '', code_tarif: '', quantite: '', montant: '', type_examen: '' };
-    const onInfoExamen = (num_arrive, date_arrive, pdonne) => {
-        setinfoajoutExamen({ num_arriv: num_arrive, date_arriv: date_arrive, donne: pdonne })
-    }
+
     let handleChange = (i, name, valeur) => {
         let newFormExamen = [...infoExamen];
-        newFormExamen[i][name] = valeur;
-        // setinfoExamen(newFormExamen);
-        onInfoExamen(props.data.numero, props.data.date_arr, newFormExamen);
-
+        newFormExamen[i][name] = valeur;   
+        setinfoExamen(newFormExamen);        
     }
-
+    
     let ajoutFormulaire = () => {
         setinfoExamen([...infoExamen, Nouveau]);
     }
@@ -39,12 +35,11 @@ export default function AjoutExamen(props) {
     }
 
 
-
     // **************************************************************************  
 
     const [verfChamp, setverfChamp] = useState(false);
     const onVide = () => {
-        setinfoajoutExamen({ num_arriv: '', date_arriv: '', donne: [{}] });
+        setinfoajoutExamen({ num_arriv: '', date_arriv: '', donne:null });
         setinfoExamen([{ lib_examen: '', code_tarif: '', quantite: '', montant: '', type_examen: '' }])
     }
 
@@ -95,14 +90,14 @@ export default function AjoutExamen(props) {
 
     const onSub = async () => { //Ajout de donnees vers Laravel
         setcharge({ chajoute: true });
-        await axios.post(props.url + 'insertExamenJour', infoajoutExamen)
+        await axios.post(props.url + 'insertExamenJour', { num_arriv: props.data.numero, date_arriv:  props.data.date_arr, donne: infoExamen })
             .then(res => {
                 notificationAction(res.data.etat, 'Enregistrement', res.data.message);//message avy @back
                 setcharge({ chajoute: false });
                 setTimeout(() => {
                     props.setrefreshData(1);
-                    onVide();
                     onHide('displayBasic2');
+                    onVide();
                 }, 600)
             })
             .catch(err => {
@@ -129,7 +124,6 @@ export default function AjoutExamen(props) {
                                 <div className="col-3  field my-0  flex flex-column">
                                     <label htmlFor="username2" className="label-input-sm">Libellé</label>
                                     <InputText id="username2" value={element.lib_examen} aria-describedby="username2-help" className='form-input-css-tamby' name='lib_examen' readOnly />
-
                                 </div>
 
                                 <div className="col-2 field my-1 flex flex-column">

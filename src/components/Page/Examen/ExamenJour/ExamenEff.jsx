@@ -12,9 +12,7 @@ import { Tag } from 'primereact/tag';
 import Voir from './ExamenEff/Voir';
 
 export default function ExamenEff(props) {
-    //Block Chargement
-    const [blockedDocument, setBlockedDocument] = useState(true);
-
+   
     //Chargement de données
     const [charge, setCharge] = useState(false);
     const [refreshData, setrefreshData] = useState(0);
@@ -45,9 +43,8 @@ export default function ExamenEff(props) {
             .then(
                 (result) => {
                     setrefreshData(0);
-                    setlistExamenNonEff(result.data);
-                    setBlockedDocument(false);
                     setCharge(false);
+                    setlistExamenNonEff(result.data);
                     initFilters1();
 
                 }
@@ -56,7 +53,6 @@ export default function ExamenEff(props) {
 
     useEffect(() => {
         setCharge(true);
-        setBlockedDocument(true);
         setlistExamenNonEff([{ nom: 'Chargement de données...' }])
         setTimeout(() => {
             loadData();

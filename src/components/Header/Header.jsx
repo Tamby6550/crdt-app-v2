@@ -30,20 +30,20 @@ export default function Header() {
       expanded:pathname === "/client" || pathname === "/patient" || pathname === "/prescripteur" || pathname === "/examen" ? true : false ,
       items: [
         {
-          label: 'Client',
-          icon: PrimeIcons.CREDIT_CARD,
-          className: pathname === "/client" && classactive,
-          command: () => {
-            navigate("/client");
-          
-          }
-        },
-        {
           label: 'Patient',
           icon: PrimeIcons.FILE,
           className: pathname === "/patient" && classactive,
           command: () => {
             navigate("/patient");
+          
+          }
+        },
+        {
+          label: 'Client',
+          icon: PrimeIcons.CREDIT_CARD,
+          className: pathname === "/client" && classactive,
+          command: () => {
+            navigate("/client");
           
           }
         },

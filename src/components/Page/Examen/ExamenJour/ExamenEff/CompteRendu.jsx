@@ -8,12 +8,17 @@ import axios from 'axios'
 import BundledEditor from './service/EditorTiny/BundledEditor';
 import ReactToPrint from 'react-to-print'
 import QRCode from 'react-qr-code'
-import SaisieReglement from '../../../Reglement/SaisieReglement'
+
+
 export default function CompteRendu(props) {
 
 
     let numQR = (props.date_arriv).replace(/\//g, "") + '' + (props.num_arriv);
-    
+    const [info, setinfo] = useState({ num_arriv: '', date_arriv: '', cr_name: '', lib_examen: '' })
+    const [chargePost, setchargePost] = useState({ chajoute: false });
+    const [printDesact, setprintDesact] = useState(true)
+
+
     /*Word */
     const editorRef = useRef(null);
     let reportTemplateRef = useRef();
@@ -23,35 +28,55 @@ export default function CompteRendu(props) {
         if (editorRef.current) {
             let strin = JSON.stringify({ data: editorRef.current.getContent() });
             let pars = JSON.parse(strin);
-            // console.log(pars.data)
-            // console.log("'<html>" + pars.data + "</html>'");
             var myElement = document.getElementById("print");
             myElement.innerHTML = editorRef.current.getContent();
-            // setdtXXX(editorRef.current.getContent())
-            // setContent(editorRef.current.getContent())
             envoyeData(pars.data)
         }
     };
     /*Word */
 
+    const chargeProps = () => {
+
+        let lib_examenconv = props.data.lib_examen
+        lib_examenconv = lib_examenconv.replace(/\//g, "--");
+        lib_examenconv = lib_examenconv.replace(/\"/g, "---");
+        lib_examenconv = lib_examenconv.replace(/\#/g, "---");
+        lib_examenconv = lib_examenconv.replace(/\=/g, "----");
+        lib_examenconv = lib_examenconv.replace(/\&/g, "-----");
+        lib_examenconv = lib_examenconv.replace(/\?/g, "------");
+        lib_examenconv = lib_examenconv.replace(/\#/g, "-------");
+        lib_examenconv = lib_examenconv.replace(/\'/g, "--------");
+        let numDate = (props.date_arriv).replace(/\//g, "") + '' + (props.num_arriv) + lib_examenconv;
+        setinfo({ num_arriv: props.num_arriv, date_arriv: props.date_arriv, cr_name: ((props.date_arriv).replace(/\//g, "") + '' + (props.num_arriv) + lib_examenconv), lib_examen: props.lib_examen })
+    };
+
     //Post Vers serveur node js
     const envoyeData = async (data) => {
-        let conv = data;
-        conv = conv.replace(/\//g, "*");
-        let numDate = (props.date_arriv).replace(/\//g, "") + '' + (props.num_arriv);
-        try {
+        setchargePost({ chajoute: true });
+        let lib_examenconv = props.data.lib_examen
+        lib_examenconv = lib_examenconv.replace(/\//g, "--");
+        lib_examenconv = lib_examenconv.replace(/\"/g, "---");
+        lib_examenconv = lib_examenconv.replace(/\#/g, "---");
+        lib_examenconv = lib_examenconv.replace(/\=/g, "----");
+        lib_examenconv = lib_examenconv.replace(/\&/g, "-----");
+        lib_examenconv = lib_examenconv.replace(/\?/g, "------");
+        lib_examenconv = lib_examenconv.replace(/\#/g, "-------");
+        lib_examenconv = lib_examenconv.replace(/\'/g, "--------");
 
+        let numDate = (props.date_arriv).replace(/\//g, "") + '' + (props.num_arriv) + lib_examenconv;
+        try {
             await axios.post(`http://localhost:5000/api/hello/${numDate}`, {
                 headers: {
                     'Content-Type': 'text/html'
                 },
                 body: data
-            })
-                .then(
-                    (result) => {
-                        console.log(result)
-                    }
-                )
+            }).then(
+                (result) => {
+                    setTimeout(() => {
+                        onSub()
+                    }, 500)
+                }
+            )
                 .catch((e) => {
                     console.log(e)
                 })
@@ -59,6 +84,10 @@ export default function CompteRendu(props) {
             console.log(error)
         }
     }
+    useEffect(() => {
+        console.log(info)
+    }, [info])
+
 
     const toastTR = useRef(null);
     /*Notification Toast */
@@ -94,6 +123,8 @@ export default function CompteRendu(props) {
     }
     const onHide = (name) => {
         dialogFuncMap[`${name}`](false);
+        props.chargementData()
+        setprintDesact(true)
     }
 
     const renderFooter = (name) => {
@@ -103,6 +134,7 @@ export default function CompteRendu(props) {
             </div>
         );
     }
+
     const renderHeader = (name) => {
         //Ovaina ho numero ny date
         let numDate = (props.date_arriv).replace(/\//g, "") + '' + (props.num_arriv);
@@ -117,15 +149,29 @@ export default function CompteRendu(props) {
 
     /** Fin modal */
 
+    const onSub = async () => { //Ajout de donnees vers Laravel
+        await axios.post(props.url + 'updateExamenDetailsCR', info)
+            .then(res => {
+                setprintDesact(false);
+                notificationAction(res.data.etat, 'Compte Rendu', res.data.message);//message avy @back
+                setchargePost({ chajoute: false });
+            })
+            .catch(err => {
+                console.log(err);
+                notificationAction('error', 'Erreur', err.data.message);//message avy @back
+                setchargePost({ chajoute: false });
+            });
+    }
 
     return (
         <>
-            <Toast ref={toastTR} position="top-right" />
 
-            <Button icon={PrimeIcons.BOOK} className='p-buttom-sm p-1 ml-4 p-button-success ' tooltip='Ajout compte rendu' tooltipOptions={{ position: 'top' }} onClick={() => { onClick('displayBasic2'); }} />
+            <Button icon={PrimeIcons.BOOK} className='p-buttom-sm p-1 ml-4 p-button-info ' tooltip='Ajout compte rendu' tooltipOptions={{ position: 'top' }}
+                onClick={() => { onClick('displayBasic2'); chargeProps() }} />
 
             <Dialog maximizable header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-8 md:col-9 col-10 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
-                        {/* <SaisieReglement/> */}
+                <Toast ref={toastTR} position="top-right" />
+                {/* <SaisieReglement/> */}
                 <div className="p-1  style-modal-tamby">
                     <div className='mb-3'>
                         <BundledEditor
@@ -147,28 +193,27 @@ export default function CompteRendu(props) {
                             }}
                         />
                     </div>
-                    <button onClick={log} className="p-button mr-2">Enregistrer ici avant generation pdf</button>
-                    <ReactToPrint trigger={() => <button className="p-button">
-                        Generer pdf
-                    </button>} content={() => reportTemplateRef} />
+                    <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-primary ' label={chargePost.chajoute ? 'Enregistrement...' : 'Enregistrer'} onClick={log} />
+                    <ReactToPrint trigger={() =>
+                        <Button icon={PrimeIcons.PRINT} className='p-button-sm p-button-primary ml-3 ' label={'Imprimer'} disabled={printDesact} />
+                    } content={() => reportTemplateRef} />
                 </div>
             </Dialog>
-        <div className='hidden'>
-        <div  ref={(el) => (reportTemplateRef = el)}>
-                <div className="flex justify-content-end w-100" >
-                   
-                    <div style={{width:"45px",height:"45px"}}>
-                    <QRCode 
-                        size={256}
-                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                        value={numQR}
-                        viewBox={`0 0 256 256`}
-                    />
+            <div className='hidden'>
+                <div ref={(el) => (reportTemplateRef = el)}>
+                    <div className="flex justify-content-end w-100"  >
+                        <div style={{ width: "45px", height: "45px" }}>
+                            <QRCode
+                                size={256}
+                                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                                value={numQR}
+                                viewBox={`0 0 256 256`}
+                            />
+                        </div>
                     </div>
+                    <div id="print" style={{ fontSize: '1.4em' }}></div>
                 </div>
-                <div id="print" style={{fontSize:'1.4em'}}></div>
             </div>
-        </div>
         </>
     )
 }

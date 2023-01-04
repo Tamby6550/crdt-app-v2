@@ -6,30 +6,36 @@ import { Column } from 'primereact/column'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import CompteRendu from './CompteRendu';
-
+import { Tag } from 'primereact/tag';
+import SaisieReglement from '../../../Reglement/SaisieReglement'
 /*Importer modal */
 import { Dialog } from 'primereact/dialog';
 import axios from 'axios'
 
 export default function Voir(props) {
 
+
+    /*Sidebar FullScreen */
+
+    /*Sidebar FullScreen */
+
     //Declaration useSatate
     //Chargement de données
     const [charge, setCharge] = useState(false);
     const [infoexamenPatient, setinfoexamenPatient] = useState([{ lib_examen: '', code_tarif: '', quantite: '', montant: '', date_examen: '', type: '' }]);
-
-
-
+    const [verfCompteRendu, setverfCompteRendu] = useState(false)
     //Get List Examen
     const loadData = async (numero, datearr) => {
         await axios.get(props.url + `getPatientExamenEff/${numero}&${datearr}`)
             .then(
                 (result) => {
-                    setinfoexamenPatient(result.data);
+                    setinfoexamenPatient(result.data.liste);
+                    setverfCompteRendu(result.data.verf)
                     setCharge(false);
                 }
             );
     }
+
     const chargementData = () => {
         setCharge(true);
         let dt = (props.data.date_arr).split('/');
@@ -103,24 +109,18 @@ export default function Voir(props) {
                 <div className='my-0  py-2'>
                     <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{ position: 'top' }}
                         onClick={() => {
-                            let dt = (props.data.date_arr).split('/');
-                            let cmpltDate = dt[0] + '-' + dt[1] + '-' + dt[2];
-
-                            //Ovaina - ze slash / rehetra raha misy , sod manahirana ny URL
-                            let lib_exam = data.lib_examen;
-                            lib_exam = lib_exam.replace(/\//g, "-");
 
                             const accept = () => {
-                                axios.delete(props.url + `deleteExamenDetails/${props.data.numero}&${cmpltDate}&${lib_exam}`)
+                                axios.post(props.url + `deleteExamenDetails`, { num_arriv: props.data.numero, date_arriv: props.data.date_arr, lib_examen: data.lib_examen })
                                     .then(res => {
-                                        notificationAction('info', 'Suppression reuissie !', 'Examen bien supprimer !');
-                                        chargementData()
+                                        notificationAction('info', 'Suppression reuissie !', res.data.message);
                                         if (res.data.nbrexamen == 1) {
                                             setTimeout(() => {
                                                 props.setrefreshData(1);
                                                 onHide('displayBasic2');
-                                            }, 450)
+                                            }, 600)
                                         }
+                                        chargementData()
                                     })
                                     .catch(err => {
                                         console.log(err);
@@ -141,12 +141,30 @@ export default function Voir(props) {
                                 reject
                             });
                         }} />
-                    <CompteRendu url={props.url} data={data} date_arriv={props.data.date_arr}  num_arriv={props.data.numero} />
 
+                    <CompteRendu url={props.url} data={data} date_arriv={props.data.date_arr} num_arriv={props.data.numero} chargementData={chargementData} lib_examen={data.lib_examen} />
                 </div>
             </div>
         )
     }
+    const bodyStatus = (data) => {
+        return (
+            <div className='flex flex-row justify-content-between align-items-center m-0 '>
+                <div className='my-0  py-2'>
+                    {data.cr_name == '-' ?
+                        <Tag className="mr-2 " severity={"warning"} > Non</Tag>
+                        :
+                        <Tag className="mr-2 " severity={"success"} >Ok</Tag>
+                    }
+                </div>
+            </div>
+        )
+    }
+
+
+
+
+
 
 
     return (
@@ -154,7 +172,7 @@ export default function Voir(props) {
             <Toast ref={toastTR} position="top-right" />
 
             <Button icon={PrimeIcons.EYE} className='p-buttom-sm p-1 mr-2 p-button-info ' tooltip='Voir' tooltipOptions={{ position: 'top' }} onClick={() => { onClick('displayBasic2'); chargementData() }} />
-
+         
             <Dialog header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-9 md:col-10 col-11 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
                 <div className="p-1  style-modal-tamby">
                     <div className="col-12 field my-1 flex flex-column">
@@ -170,15 +188,14 @@ export default function Voir(props) {
                             <Column field='date_exam' header="Date examen"></Column>
                             <Column field='type' header="Type"></Column>
                             <Column header="Action" body={bodyBoutton} align={'left'}></Column>
+                            <Column header="Status" body={bodyStatus} > </Column>
                         </DataTable>
                     </div>
                     <div className='flex mt-3 mr-4 justify-content-center '>
-                        <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-success ' label={charge.chajoute ? 'Veuillez attendez...' : 'Valider'}
+                        <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-success ' disabled={verfCompteRendu} label={charge.chajoute ? 'Veuillez attendez...' : 'Valider'}
                             onClick={() => {
-
                             }} />
                     </div>
-
                 </div>
             </Dialog>
         </>

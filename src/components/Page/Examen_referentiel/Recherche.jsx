@@ -88,8 +88,9 @@ export default function Recherche(props) {
         props.setCharge(true);
         props.setlistexamen([{ code_tarif: 'Chargement de données...' }])
         axios.post(props.url + 'rechercheExamen', props.infoexamen)
-            .then(
-                (result) => {
+        .then(
+            (result) => {
+                    props.setCharge(false);
                     props.setrefreshData(0);
                     props.setlistexamen(result.data)
                     onHide('displayBasic2');
