@@ -5,7 +5,7 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
-import CompteRendu from './CompteRendu';
+import VoirCompteRendu from './VoirCompteRendu';
 import { Tag } from 'primereact/tag';
 /*Importer modal */
 import { Dialog } from 'primereact/dialog';
@@ -49,10 +49,7 @@ export default function Voir(props) {
     }
 
     const toastTR = useRef(null);
-    /*Notification Toast */
-    const notificationAction = (etat, titre, message) => {
-        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 10000 });
-    }
+
     /**Style css */
     const stylebtnRec = {
         fontSize: '1rem', padding: ' 0.8375rem 0.975rem', backgroundColor: '#a79d34', border: '1px solid #a79d34'
@@ -111,82 +108,11 @@ export default function Voir(props) {
         return (
             <div className='flex flex-row justify-content-between align-items-center m-0 '>
                 <div className='my-0  py-2'>
-                    <Button icon={PrimeIcons.TIMES} className='p-buttom-sm p-1 ' style={stylebtnDetele} tooltip='Supprimer' tooltipOptions={{ position: 'top' }}
-                        onClick={() => {
-
-                            const accept = () => {
-                                axios.post(props.url + `deleteExamenDetails`, { num_arriv: props.data.numero, date_arriv: props.data.date_arr, lib_examen: data.lib_examen })
-                                    .then(res => {
-                                        notificationAction('info', 'Suppression reuissie !', res.data.message);
-                                        if (res.data.nbrexamen == 1) {
-                                            setTimeout(() => {
-                                                onHide('displayBasic2');
-                                                props.changecharge(1);
-                                            }, 600)
-                                        }
-                                        chargementData()
-                                    })
-                                    .catch(err => {
-                                        console.log(err);
-                                        notificationAction('error', 'Suppression non reuissie !', 'Examen non supprimer !');
-                                    })
-                            }
-                            const reject = () => {
-                                return null;
-                            }
-                            confirmDialog({
-                                message: 'Voulez vous supprimer l\'examen : ' + data.lib_examen,
-                                header: 'Suppression  ',
-                                icon: 'pi pi-exclamation-circle',
-                                acceptClassName: 'p-button-danger',
-                                acceptLabel: 'Ok',
-                                rejectLabel: 'Annuler',
-                                accept,
-                                reject
-                            });
-                        }} />
-
-                    <CompteRendu url={props.url} data={data} date_arriv={props.data.date_arr} num_arriv={props.data.numero} chargementData={chargementData} lib_examen={data.lib_examen} />
+                    <VoirCompteRendu url={props.url} data={data} date_arriv={props.data.date_arr} num_arriv={props.data.numero} chargementData={chargementData} lib_examen={data.lib_examen} />
                 </div>
             </div>
         )
     }
-    const bodyStatus = (data) => {
-        return (
-            <div className='flex flex-row justify-content-between align-items-center m-0 '>
-                <div className='my-0  py-2'>
-                    {data.cr_name == '-' ?
-                        <Tag className="mr-2 " severity={"warning"} > Non</Tag>
-                        :
-                        <Tag className="mr-2 " severity={"success"} >Ok</Tag>
-                    }
-                </div>
-            </div>
-        )
-    }
-
-
-
-    const onValideExamen = async () => { //Modification  donnees vers Laravel
-        setchargeV({ chupdate: true });
-        await axios.put(props.url + 'validationExamen', infoExamenVal)
-            .then(res => {
-                notificationAction(res.data.etat, 'Validation examen', res.data.message);//message avy @back
-                setchargeV({ chupdate: false });
-                setTimeout(() => {
-                    onHide('displayBasic2');
-                    props.changecharge(1);
-                }, 600)
-            })
-            .catch(err => {
-                console.log(err);
-                notificationAction('error', 'Erreur', err.data.message);//message avy @back
-                setchargeV({ chupdate: false });
-            });
-    }
-
-
-
     return (
         <>
             <Toast ref={toastTR} position="top-right" />
@@ -200,24 +126,16 @@ export default function Voir(props) {
                         <h3 className='m-1' htmlFor="">Numéro d'arrivée : <u style={{ color: 'rgb(34, 197, 94)', fontWeight: 'bold', fontSize: '1.4rem' }}> {props.data.numero}</u></h3>
                     </div>
                     <div className="flex flex-column justify-content-center">
-                        <DataTable header={header} value={infoexamenPatient} scrollable scrollHeight="350px" loading={charge} responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun resultat !"} style={{ fontSize: '1.1em' }} >
+                        <DataTable header={header} value={infoexamenPatient} scrollable scrollHeight="350px" loading={charge} responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun resultat !"} style={{ fontSize: '1em' }} >
                             <Column field='lib_examen' header={'Libellé'} style={{ fontWeight: '600' }}></Column>
                             <Column field={'code_tarif'} header={'Cotation'} style={{ fontWeight: '600' }}></Column>
                             <Column field={'quantite'} header="Quantité" style={{ fontWeight: '600' }}></Column>
                             <Column field='montant' header="P.U"></Column>
                             <Column field='date_exam' header="Date examen"></Column>
                             <Column field='type' header="Type"></Column>
-                            <Column header="Action" body={bodyBoutton} align={'left'}></Column>
-                            <Column header="Status" body={bodyStatus} > </Column>
+                            <Column header="" body={bodyBoutton} align={'left'}></Column>
                         </DataTable>
                     </div>
-                    <div className='flex mt-3 mr-4 justify-content-center '>
-                        <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-success ' tooltip="Valider l'examen" disabled={verfCompteRendu} style={{ cursor: 'pointer' }} label={chargeV.chupdate ? 'Veuillez attendez...' : 'Valider'}
-                            onClick={() => {
-                                onValideExamen()
-                            }} />
-                    </div>
-                    {verfCompteRendu ? <center><label id="username2-help" className="p-error block justify-content-center" style={{ fontWeight: 'bold' }}>Vous devez ajouter compte rendu pour <i style={{fontWeight:'800'}} >Valider </i> l'examen </label></center> : null}
                 </div>
             </Dialog>
         </>

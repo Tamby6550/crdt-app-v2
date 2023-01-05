@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -9,15 +10,16 @@ import { InputText } from 'primereact/inputtext';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
-import Voir from './ExamenEff/Voir';
+import VoirCR from './ExamenEffV/VoirCR';
+import Recherche from './ExamenEffV/Recherche';
 
-export default function ExamenEff(props) {
+export default function ExamenEffValide(props) {
 
     //Chargement de données
     const [charge, setCharge] = useState(false);
     const [refreshData, setrefreshData] = useState(0);
     const [listExamenNonEff, setlistExamenNonEff] = useState([{ numero: '', date_arr: '', id_patient: '', type_pat: '', verf_exam: '', nom: '', date_naiss: '', telephone: '' }]);
-
+    const [infoReherche, setinfoReherche] = useState({ numero_arr: '', date_arr: '', date_naiss: '', nom: '' })
 
     /**Style css */
     const stylebtnRec = {
@@ -31,27 +33,26 @@ export default function ExamenEff(props) {
 
     const toastTR = useRef(null);
     /*Notification Toast */
-    const notificationAction = (etat, titre, message) => {
-        toastTR.current.show({ severity: etat, summary: titre, detail: message, life: 10000 });
-    }
 
 
 
     const changecharge = (value) => {
         setrefreshData(value)
     }
+    const onVide = () => {
+        setinfoReherche({ numero_arr: '', date_arr: '', date_naiss: '', nom: '' })
+    }
 
     //Get List patient
     const loadData = async () => {
 
-        await axios.get(props.url + `getExamenEff`)
+        await axios.get(props.url + `getExamenEffValide`)
             .then(
                 (result) => {
+                    onVide();
                     setrefreshData(0);
                     setCharge(false);
                     setlistExamenNonEff(result.data);
-                    initFilters1();
-
                 }
             );
     }
@@ -65,58 +66,43 @@ export default function ExamenEff(props) {
     }, [refreshData]);
 
 
-
-
-    const header = (
-        <div className='flex flex-row justify-content-center align-items-center m-0 '>
-            <h3 className='m-3'>Examens éffectuées</h3>
-        </div>
-    )
-
     const bodyBoutton = (data) => {
         return (
             <div className='flex flex-row justify-content-between align-items-center m-0 '>
                 <div className='my-0  py-2'>
-                    <Voir url={props.url} data={data} changecharge={changecharge} />
+                    <VoirCR url={props.url} data={data} changecharge={changecharge} />
                 </div>
             </div>
         )
     }
 
-    //Global filters
+  
 
-    const [filters1, setFilters1] = useState(null);
-    const [globalFilterValue1, setGlobalFilterValue1] = useState('');
-    const onGlobalFilterChange1 = (e) => {
-        const value = e.target.value;
-        let _filters1 = { ...filters1 };
-        _filters1['global'].value = value;
 
-        setFilters1(_filters1);
-        setGlobalFilterValue1(value);
-    }
-    const initFilters1 = () => {
-        setFilters1({
-            'global': { value: null, matchMode: FilterMatchMode.CONTAINS }
-        });
-        setGlobalFilterValue1('');
-    }
-    const clearFilter1 = () => {
-        initFilters1();
-    }
-    const renderHeader1 = () => {
-        return (
-            <div className="flex justify-content-between">
-                <Button type="button" icon="pi pi-filter-slash" label="Vider" className="p-button-outlined" onClick={clearFilter1} />
-                <h3 className='m-3'>Examens en attente de Validation</h3>
-                <span className="p-input-icon-left global-tamby">
-                    <i className="pi pi-search" />
-                    <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Recherche global..." />
-                </span>
+    const header = (
+        <div className='flex flex-row justify-content-between align-items-center m-0 '>
+            <div className='my-0 flex  py-2'>
+                <Recherche icon={PrimeIcons.SEARCH} setCharge={setCharge} setlistExamenNonEff={setlistExamenNonEff} changecharge={changecharge} url={props.url} infoReherche={infoReherche} setinfoReherche={setinfoReherche} />
+                {infoReherche.date_arr == "" && infoReherche.nom == "" && infoReherche.date_naiss == "" && infoReherche.numero_arr == "" ? null :
+                    <label className='ml-5 mt-2'>
+                        Resultat de recherche ,
+                        Date d'arrivée : <i style={{ fontWeight: '700' }}>"{(infoReherche.date_arr).toUpperCase()}"</i>  ,
+                        Numéro d'arrivée : <i style={{ fontWeight: '700' }}>"{(infoReherche.numero_arr).toUpperCase()}"</i>,
+                        Nom : <i style={{ fontWeight: '700' }}>"{(infoReherche.nom).toUpperCase()}"</i>,
+                        Date naiss : <i style={{ fontWeight: '700' }}>"{(infoReherche.date_naiss).toUpperCase()}"</i>,
+                    </label>}
             </div>
-        )
-    }
-    const header1 = renderHeader1();
+            {infoReherche.date_arr != "" || infoReherche.nom != "" || infoReherche.date_naiss != "" || infoReherche.numero_arr != "" ? <Button icon={PrimeIcons.REFRESH} className='p-buttom-sm p-1 p-button-warning ' tooltip='actualiser' tooltipOptions={{ position: 'top' }} onClick={() => setrefreshData(1)} />
+                :
+                <>
+                    <h3 className='m-3'>Examens éffectuées</h3>
+                    <h3 className='m-3' style={{ visibility: 'hidden' }} >Examens éffectuées</h3>
+                </>
+            }
+        </div>
+    )
+
+    // const header1 = header();
 
     //Global filters
     return (
@@ -126,7 +112,7 @@ export default function ExamenEff(props) {
 
             <div className="flex flex-column justify-content-center">
 
-                <DataTable header={header1} filters={filters1} globalFilterFields={['numero', 'date_arr', 'id_patient', 'nom', 'date_naiss', 'type_pat']} value={listExamenNonEff} loading={charge} scrollable scrollHeight="550px" responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun examen à éffectuées"} >
+                <DataTable header={header}  globalFilterFields={['numero', 'date_arr', 'id_patient', 'nom', 'date_naiss', 'type_pat']} value={listExamenNonEff} loading={charge} scrollable scrollHeight="550px" responsiveLayout="scroll" className='bg-white' emptyMessage={"Aucun examen à éffectuées"} >
 
                     <Column field='numero' header={'Numéro d\'Arrivée'} style={{ fontWeight: '600' }}></Column>
                     <Column field={'date_arr'} header={'Date d\'Arrivée'} style={{ fontWeight: '600' }}></Column>

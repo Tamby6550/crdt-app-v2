@@ -10,7 +10,7 @@ import ReactToPrint from 'react-to-print'
 import QRCode from 'react-qr-code'
 
 
-export default function CompteRendu(props) {
+export default function VoirCompteRendu(props) {
 
 
     const [info, setinfo] = useState({ num_arriv: '', date_arriv: '', cr_name: '', lib_examen: '' })
@@ -170,7 +170,7 @@ export default function CompteRendu(props) {
     return (
         <>
 
-            <Button icon={PrimeIcons.BOOK} className='p-buttom-sm p-1 ml-4 p-button-info ' tooltip='Ajout compte rendu' tooltipOptions={{ position: 'top' }}
+            <Button icon={PrimeIcons.BOOK} className='p-buttom-sm p-1 ml-4 p-button-info ' tooltip='Voir le compte rendu' tooltipOptions={{ position: 'top' }}
                 onClick={() => { onClick('displayBasic2'); chargeProps(); }} />
 
             <Dialog maximizable header={renderHeader('displayBasic2')} visible={displayBasic2} className="lg:col-8 md:col-9 col-10 p-0" footer={renderFooter('displayBasic2')} onHide={() => onHide('displayBasic2')}>
@@ -199,7 +199,7 @@ export default function CompteRendu(props) {
                     </div>
                     <Button icon={PrimeIcons.SAVE} className='p-button-sm p-button-primary ' label={chargePost.chajoute ? 'Enregistrement...' : 'Enregistrer'} onClick={log} />
                     <ReactToPrint trigger={() =>
-                        <Button icon={PrimeIcons.PRINT} className='p-button-sm p-button-primary ml-3 ' label={'Imprimer'} disabled={printDesact} />
+                        <Button icon={PrimeIcons.PRINT} className='p-button-sm p-button-primary ml-3 ' label={'Imprimer'}  />
                     } content={() => reportTemplateRef} />
                 </div>
             </Dialog>
