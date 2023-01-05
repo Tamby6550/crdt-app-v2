@@ -7,7 +7,6 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Patient from './components/Page/Patient'
 import { BreadCrumb } from 'primereact/breadcrumb'
 import Facture from './components/Page/Facture';
-import Ajout from './components/Page/Facture/Ajout'
 import Impression from './components/Page/Facture/Impression'
 import Details from './components/Page/Facture/Details'
 import Annulation from './components/Page/Facture/Annulation'
@@ -100,7 +99,7 @@ function App() {
                     <Route path='/patient' element={<Patient url={url} />} />
                     <Route path='/saisie_reglement' element={<SaisieReglement url={url} />} />
                     <Route path='/mode_paiement' element={<ModePaiment url={url} />} />
-                    <Route path='/ajout' element={<Ajout url={url} />} />
+                    <Route path='/facture' element={<Facture url={url} />} />
                     <Route path='/details' element={<Details url={url} />} />
                     <Route path='/impression' element={<Impression url={url} />} />
                     <Route path='/annulation' element={<Annulation url={url} />} />

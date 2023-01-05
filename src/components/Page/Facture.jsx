@@ -1,15 +1,22 @@
-import React from 'react'
-import QRCode from 'react-qr-code'
+import React, { useState, useEffect, useRef } from 'react'
+import { TabView, TabPanel } from 'primereact/tabview';
+import FactureNon from './Facture/FactureNon';
 
-export default function Facture() {
+export default function Facture(props) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
-   
-        <QRCode
-          size={256}
-          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-          value={"hello world"}
-          viewBox={`0 0 256 256`}
-        />
-  
+    <div className="tabview-demo">
+      <div className="card">
+        <TabView activeIndex={activeIndex} onTabChange={(e) => { setActiveIndex(e.index) }} >
+          <TabPanel header="Liste Non Facturé"   >
+           <FactureNon  url={props.url}  activeIndex={activeIndex} />
+          </TabPanel>
+          <TabPanel header="Liste Facturé">
+           <h1>dfgdf</h1>
+          </TabPanel>
+        </TabView>
+      </div>
+    </div>
   )
 }

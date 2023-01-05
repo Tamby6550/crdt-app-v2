@@ -87,47 +87,56 @@ export default function Header() {
     },
     {
       label: 'Facture',
-      icon: PrimeIcons.DOLLAR,
-      expanded:pathname === "/ajout" || pathname === "/details" || pathname === "/impression" || pathname === "/annulation" ? true : false,
-      items: [
-        {
-          label: 'Ajout',
-          icon: PrimeIcons.CREDIT_CARD,
-          className: pathname === "/ajout" && classactive,
-          command: () => {
-            navigate("/ajout");
-          
-          }
-        },
-        {
-          label: 'Détails',
-          icon: PrimeIcons.FILE,
-          className: pathname === "/details" && classactive,
-          command: () => {
-            navigate("/details");
-          
-          }
-        },
-        {
-          label: 'Impression',
-          icon: PrimeIcons.FILE,
-          className: pathname === "/impression" && classactive,
-          command: () => {
-            navigate("/impression");
-          
-          }
-        },
-        {
-          label: 'Annulation',
-          icon: PrimeIcons.FILE,
-          className: pathname === "/annulation" && classactive,
-          command: () => {
-            navigate("/annulation");
-          
-          }
-        },
-      ]
+      icon: PrimeIcons.USERS,
+      className: pathname === "/facture" && classactive,
+      command: () => {
+        navigate("/facture");
+      
+      }
     },
+    // {
+    //   label: 'Facture',
+    //   icon: PrimeIcons.DOLLAR,
+    //   expanded:pathname === "/ajout" || pathname === "/details" || pathname === "/impression" || pathname === "/annulation" ? true : false,
+    //   items: [
+    //     {
+    //       label: 'Ajout',
+    //       icon: PrimeIcons.CREDIT_CARD,
+    //       className: pathname === "/ajout" && classactive,
+    //       command: () => {
+    //         navigate("/ajout");
+          
+    //       }
+    //     },
+    //     {
+    //       label: 'Détails',
+    //       icon: PrimeIcons.FILE,
+    //       className: pathname === "/details" && classactive,
+    //       command: () => {
+    //         navigate("/details");
+          
+    //       }
+    //     },
+    //     {
+    //       label: 'Impression',
+    //       icon: PrimeIcons.FILE,
+    //       className: pathname === "/impression" && classactive,
+    //       command: () => {
+    //         navigate("/impression");
+          
+    //       }
+    //     },
+    //     {
+    //       label: 'Annulation',
+    //       icon: PrimeIcons.FILE,
+    //       className: pathname === "/annulation" && classactive,
+    //       command: () => {
+    //         navigate("/annulation");
+          
+    //       }
+    //     },
+    //   ]
+    // },
     {
       label: 'Reglements',
       icon: PrimeIcons.MONEY_BILL,
